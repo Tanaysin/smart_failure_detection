@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Risk Intelligence Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-chart-line"></i>
+            <h2>Startup Analyzer</h2>
+        </div>
+
+        <ul>
+
+            <li id="dashboardBtn" class="active">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </li>
+
+            <li id="reportBtn">
+                <i class="fa-solid fa-file-lines"></i>
+                Assessment Report
+            </li>
+
+            <li id="marketBtn">
+                <i class="fa-solid fa-chart-line"></i>
+                Market Trends
+            </li>
+
+            <li id="competitorBtn">
+                <i class="fa-solid fa-building"></i>
+                Competitor Analysis
+            </li>
+
+            <li id="datasetBtn">
+                <i class="fa-solid fa-database"></i>
+                Dataset
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+        <!-- ================= NAVBAR ================= -->
+
+        <nav>
+
+            <div class="title">
+
+                <h1>Startup Risk Intelligence Dashboard</h1>
+
+                <p>Business Failure Analytics Platform</p>
+
+            </div>
+
+            <div class="nav-right">
+
+                <input
+                    type="text"
+                    placeholder="Search startup...">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <div class="profile">
+
+                    <span>Admin</span>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+        <!-- ================================================= -->
+        <!-- DASHBOARD PAGE -->
+        <!-- ================================================= -->
+
+        <section id="dashboardPage">
+
+            <!-- KPI CARDS -->
+
+            <section class="cards">
+
+                <div class="card">
+
+                    <div>
+
+                        <h4>Overall Risk</h4>
+
+                        <h2>72%</h2>
+
+                        <p class="red">
+
+                            High Risk
+
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div class="card">
+
+                    <div>
+
+                        <h4>Success Probability</h4>
+
+                        <h2>28%</h2>
+
+                        <p class="yellow">
+
+                            Moderate
+
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div class="card">
+
+                    <div>
+
+                        <h4>Financial Health</h4>
+
+                        <h2>81%</h2>
+
+                        <p class="green">
+
+                            Stable
+
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                </div>
+
+                <div class="card">
+
+                    <div>
+
+                        <h4>Market Risk</h4>
+
+                        <h2>63%</h2>
+
+                        <p class="yellow">
+
+                            Medium
+
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </div>
+
+            </section>
+
+            <!-- ================= STARTUP FORM ================= -->
+
+            <section class="startup-form">
+
+                <div class="form-card">
+
+                    <h2>Analyse Startup</h2>
+
+                    <form id="submissionForm">
+
+                        <div class="row">
+
+                            <div class="form-group">
+
+                                <label>Startup Name</label>
+
+                                <input
+                                    type="text"
+                                    id="projectName"
+                                    required>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>Industry</label>
+
+                                <input
+                                    type="text"
+                                    id="industry"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group">
+
+                                <label>Business Model</label>
+
+                                <select id="businessModel">
+
+                                    <option>B2B</option>
+                                    <option>B2C</option>
+                                    <option>SaaS</option>
+                                    <option>Other</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>Budget</label>
+
+                                <input
+                                    type="number"
+                                    id="budget">
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group">
+
+                                <label>Target Market</label>
+
+                                <input
+                                    type="text"
+                                    id="targetMarket">
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group">
+
+                                <label>Description</label>
+
+                                <textarea
+                                    id="description"
+                                    rows="5"></textarea>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="submitbtn">
+
+                            Analyse Startup
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- ================= CHARTS ================= -->
+
+            <section class="chart-grid">
+
+                                <div class="chart-card">
+
+                    <h3>Industry Distribution</h3>
+
+                    <canvas id="industryChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Business Model Distribution</h3>
+
+                    <canvas id="businessChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Budget Analysis</h3>
+
+                    <canvas id="budgetChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>AI Risk Profile</h3>
+
+                    <canvas id="riskRadar"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Startup Growth Trend</h3>
+
+                    <canvas id="growthChart"></canvas>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- ASSESSMENT REPORT PAGE -->
+        <!-- ========================================= -->
+
+        <section id="reportPage" class="page" style="display:none;">
+
+            <section class="reports">
+
+                <div class="assessment">
+
+                    <h2>
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                        AI Assessment Report
+
+                    </h2>
+
+                    <hr>
+
+                    <p>
+
+                        Startup :
+                        <strong id="reportStartup">
+
+                            HealthAI
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        Industry :
+                        <strong id="reportIndustry">
+
+                            Healthcare
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        Business Model :
+                        <strong id="reportModel">
+
+                            SaaS
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        Budget :
+                        <strong id="reportBudget">
+
+                            ₹500,000
+
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        Overall Risk :
+                        <strong
+                        id="reportRisk"
+                        class="red">
+
+                            High
+
+                        </strong>
+
+                    </p>
+
+                    <br>
+
+                    <h3>Key Findings</h3>
+
+                    <ul id="findingsList">
+
+                        <li>Funding below industry average</li>
+
+                        <li>Strong recurring revenue model</li>
+
+                        <li>Moderate execution capability</li>
+
+                        <li>Market competition is high</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="recommendations">
+
+                    <h2>
+
+                        <i class="fa-solid fa-lightbulb"></i>
+
+                        AI Recommendations
+
+                    </h2>
+
+                    <hr>
+
+                    <div id="recommendationList">
+
+                        <div class="tip">
+
+                            ✔ Raise additional funding
+
+                        </div>
+
+                        <div class="tip">
+
+                            ✔ Reduce burn rate
+
+                        </div>
+
+                        <div class="tip">
+
+                            ✔ Improve customer acquisition
+
+                        </div>
+
+                        <div class="tip">
+
+                            ✔ Expand target market
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Risk Charts -->
+
+            <section class="chart-grid">
+
+                <div class="chart-card">
+
+                    <h3>Risk Distribution</h3>
+
+                    <canvas id="riskBreakdownChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Risk Score Gauge</h3>
+
+                    <canvas id="riskGauge"></canvas>
+
+                </div>
+
+            </section>
+
+        </section>
+
+                <!-- ========================================= -->
+        <!-- MARKET TRENDS PAGE -->
+        <!-- ========================================= -->
+
+        <section id="marketPage" class="page" style="display:none;">
+
+            <h2 class="section-title">
+                <i class="fa-solid fa-chart-line"></i>
+                Market Trends
+            </h2>
+
+            <div class="chart-grid">
+
+                <div class="chart-card">
+
+                    <h3>Industry Growth Trend</h3>
+
+                    <canvas id="industryTrendChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Startup Funding Trend</h3>
+
+                    <canvas id="fundingTrendChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Failure Rate by Industry</h3>
+
+                    <canvas id="failureTrendChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Investment Distribution</h3>
+
+                    <canvas id="investmentChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- COMPETITOR ANALYSIS PAGE -->
+        <!-- ========================================= -->
+
+        <section id="competitorPage" class="page" style="display:none;">
+
+            <h2 class="section-title">
+
+                <i class="fa-solid fa-building"></i>
+
+                Competitor Analysis
+
+            </h2>
+
+            <div class="chart-grid">
+
+                <div class="chart-card">
+
+                    <h3>Competitor Market Share</h3>
+
+                    <canvas id="marketShareChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Revenue Comparison</h3>
+
+                    <canvas id="revenueChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Funding Comparison</h3>
+
+                    <canvas id="competitorFundingChart"></canvas>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3>Feature Comparison</h3>
+
+                    <canvas id="featureRadarChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- DATASET PAGE -->
+        <!-- ========================================= -->
+
+        <section id="datasetPage" class="page" style="display:none;">
+
+            <h2 class="section-title">
+
+                <i class="fa-solid fa-database"></i>
+
+                Startup Dataset
+
+            </h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Startup</th>
+
+                        <th>Industry</th>
+
+                        <th>Business Model</th>
+
+                        <th>Budget</th>
+
+                        <th>Risk</th>
+
+                        <th>Success</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="projectTable">
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+
+</html>
