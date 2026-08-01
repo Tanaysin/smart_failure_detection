@@ -154,7 +154,7 @@ async function loadDashboard() {
         const jsonResponse = await fetch("data/Industry_data.json");
         industryDataset = await jsonResponse.json();
 
-        const response = await fetch("https://smart-failure-detection-owp3.onrender.com");
+        const response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
         projects = await response.json();
 
         updateKPIs();
@@ -855,7 +855,7 @@ async function Submitproj(e) {
 
     try {
 
-        const response = await fetch("https://smart-failure-detection-owp3.onrender.com", {
+        const response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(project)
