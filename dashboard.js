@@ -129,26 +129,60 @@ let budgetChart;
 let growthChart;
 let radarChart;
 
+
+async function fetchIndustryData() {
+
+    try {
+
+        const response = await fetch("./public/Industry_data.json");
+
+        industryDataset = await response.json();
+
+        console.log("Industry Data Loaded");
+
+        console.log(industryDataset);
+
+    }
+
+    catch(err){
+
+        console.error("JSON Error:",err);
+
+    }
+
+}
 // ==========================================
 // PAGE LOAD
 // ==========================================
 
-window.onload = () => {
+// window.onload = () => {
 
-    // loadDashboard();
+//     // loadDashboard();
 
-    // const form = document.getElementById("submissionForm");
+//     // const form = document.getElementById("submissionForm");
 
-    // if (form) {
-    //     form.addEventListener("submit", Submitproj);
-    // }
-    loadIndustryData();
+//     // if (form) {
+//     //     form.addEventListener("submit", Submitproj);
+//     // }
+//     loadIndustryData();
 
-loadDashboard();
+// loadDashboard();
 
-document
-.getElementById("submissionForm")
-.addEventListener("submit", Submitproj);
+// document
+// .getElementById("submissionForm")
+// .addEventListener("submit", Submitproj);
+
+// };
+
+window.onload = async () => {
+
+    await fetchIndustryData();
+
+    await loadDashboard();
+
+    document
+        .getElementById("submissionForm")
+        .addEventListener("submit", Submitproj);
 
 };
 
