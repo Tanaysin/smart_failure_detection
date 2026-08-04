@@ -109,6 +109,7 @@ function centerTextPlugin(getText, subtext) {
 // ==========================================
 // Startup Risk Intelligence Dashboard
 // ==========================================
+let industryData = {};
 let industryTrendChart;
 let failureChart;
 let investmentChart;
@@ -134,20 +135,70 @@ let radarChart;
 
 window.onload = () => {
 
-    loadDashboard();
+    // loadDashboard();
 
-    const form = document.getElementById("submissionForm");
+    // const form = document.getElementById("submissionForm");
 
-    if (form) {
-        form.addEventListener("submit", Submitproj);
-    }
+    // if (form) {
+    //     form.addEventListener("submit", Submitproj);
+    // }
+    loadIndustryData();
+
+loadDashboard();
+
+document
+.getElementById("submissionForm")
+.addEventListener("submit", Submitproj);
 
 };
+
 
 // ==========================================
 // LOAD DATA FROM SERVER
 // ==========================================
+async function loadIndustryData() {
 
+    try {
+
+        const response = await fetch("industryData.json");
+
+        industryData = await response.json();
+
+        populateIndustryDropdown();
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+    }
+
+}
+function populateIndustryDropdown(){
+
+    const dropdown =
+        document.getElementById("industry");
+
+    dropdown.innerHTML =
+        '<option value="">Select Industry</option>';
+
+    Object.keys(industryData).forEach(industry=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value = industry;
+
+        option.textContent =
+            industry.charAt(0).toUpperCase()
+            + industry.slice(1);
+
+        dropdown.appendChild(option);
+
+    });
+
+}
 async function loadDashboard() {
 
     try {
