@@ -156,7 +156,7 @@ let radarChart;
 
 window.onload = async () => {
     console.log("Window Loaded");
-    await loadIndustryData();
+    await fetchIndustryData();
 
     await loadDashboard();
 
@@ -170,7 +170,7 @@ window.onload = async () => {
 // ==========================================
 // LOAD DATA FROM SERVER
 // ==========================================
-async function loadIndustryData() {
+async function fetchIndustryData() {
 console.log("loadIndustryData() called");
     try {
 
@@ -291,6 +291,8 @@ async function loadDashboard() {
         createCharts();
 
         loadTable();
+        loadIndustryData();
+
 
     }
 
