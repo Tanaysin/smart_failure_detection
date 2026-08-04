@@ -109,7 +109,7 @@ function centerTextPlugin(getText, subtext) {
 // ==========================================
 // Startup Risk Intelligence Dashboard
 // ==========================================
-let industryData = {};
+// let industryData = {};
 let industryTrendChart;
 let failureChart;
 let investmentChart;
@@ -130,27 +130,7 @@ let growthChart;
 let radarChart;
 
 
-async function fetchIndustryData() {
 
-    try {
-
-        const response = await fetch("./public/Industry_data.json");
-
-        industryDataset = await response.json();
-
-        console.log("Industry Data Loaded");
-
-        console.log(industryDataset);
-
-    }
-
-    catch(err){
-
-        console.error("JSON Error:",err);
-
-    }
-
-}
 // ==========================================
 // PAGE LOAD
 // ==========================================
@@ -176,7 +156,7 @@ async function fetchIndustryData() {
 
 window.onload = async () => {
 
-    await fetchIndustryData();
+    await loadIndustryData();
 
     await loadDashboard();
 
@@ -196,15 +176,19 @@ async function loadIndustryData() {
 
         const response = await fetch("/Industry_data.json");
 
-        industryData = await response.json();
+        industryDataset = await response.json();
 
         populateIndustryDropdown();
+
+        console.log("Industry Data Loaded");
+
+        console.log(industryDataset);
 
     }
 
     catch(err){
 
-        console.error(err);
+        console.error("Industry JSON Error:", err);
 
     }
 
@@ -217,7 +201,7 @@ function populateIndustryDropdown(){
     dropdown.innerHTML =
         '<option value="">Select Industry</option>';
 
-    Object.keys(industryData).forEach(industry=>{
+    Object.keys(industryDataset).forEach(industry=>{
 
         const option =
             document.createElement("option");
@@ -233,24 +217,53 @@ function populateIndustryDropdown(){
     });
 
 }
+// async function loadDashboard() {
+
+//     try {
+//         const jsonResponse = await fetch("/Industry_data.json");
+//         industryDataset = await jsonResponse.json();
+
+//         const response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
+//         projects = await response.json();
+
+//         updateKPIs();
+//         updateAssessment();
+//         updateRecommendations();
+//         createCharts();
+//         loadTable();
+//         loadIndustryData();
+
+//     } catch (err) {
+//         console.error("Dashboard Error:", err);
+//     }
+
+// }
 async function loadDashboard() {
 
     try {
-        const jsonResponse = await fetch("/Industry_data.json");
-        industryDataset = await jsonResponse.json();
 
-        const response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
-        projects = await response.json();
+        const response =
+            await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
+
+        projects =
+            await response.json();
 
         updateKPIs();
-        updateAssessment();
-        updateRecommendations();
-        createCharts();
-        loadTable();
-        loadIndustryData();
 
-    } catch (err) {
+        updateAssessment();
+
+        updateRecommendations();
+
+        createCharts();
+
+        loadTable();
+
+    }
+
+    catch(err){
+
         console.error("Dashboard Error:", err);
+
     }
 
 }
