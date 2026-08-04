@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
@@ -84,6 +86,32 @@ app.get("/projects", async (req, res) => {
 
 });
 
+
+// ===============================
+// GET INDUSTRY DATA
+// ===============================
+
+app.get("/industry-data", (req, res) => {
+
+    try {
+
+        const filePath = path.join(__dirname, "Industry_data.json");
+
+        const jsonData = fs.readFileSync(filePath, "utf8");
+
+        res.json(JSON.parse(jsonData));
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            message: "Unable to load industry data"
+        });
+
+    }
+
+});
 
 // ===============================
 // START SERVER
