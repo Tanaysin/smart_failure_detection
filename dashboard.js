@@ -202,7 +202,7 @@ function populateIndustryDropdown(){
 async function loadDashboard() {
 
     try {
-        const jsonResponse = await fetch("data/Industry_data.json");
+        const jsonResponse = await fetch("Industry_data.json");
         industryDataset = await jsonResponse.json();
 
         const response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
