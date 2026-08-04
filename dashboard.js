@@ -174,7 +174,9 @@ async function loadIndustryData() {
 
     try {
 
-        const response = await fetch("/Industry_data.json");
+       const response = await fetch(
+    "https://smart-failure-detection-owp3.onrender.com/industry-data"
+);
 
         industryDataset = await response.json();
 
