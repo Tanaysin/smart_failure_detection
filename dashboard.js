@@ -160,7 +160,7 @@ async function loadIndustryData() {
 
     try {
 
-        const response = await fetch("industryData.json");
+        const response = await fetch("data/industryData.json");
 
         industryData = await response.json();
 
