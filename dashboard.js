@@ -217,6 +217,7 @@ function populateIndustryDropdown(){
         dropdown.appendChild(option);
 
     });
+    populateIndustryDropdown();
 
 }
 // async function loadDashboard() {
