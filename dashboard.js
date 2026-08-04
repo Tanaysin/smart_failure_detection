@@ -195,29 +195,60 @@ async function loadIndustryData() {
     }
 
 }
-function populateIndustryDropdown(){
+// function populateIndustryDropdown(){
 
-    const dropdown =
-        document.getElementById("industry");
+//     const dropdown =
+//         document.getElementById("industry");
 
-    dropdown.innerHTML =
-        '<option value="">Select Industry</option>';
+//     dropdown.innerHTML =
+//         '<option value="">Select Industry</option>';
 
-    Object.keys(industryDataset).forEach(industry=>{
+//     Object.keys(industryDataset).forEach(industry=>{
 
-        const option =
-            document.createElement("option");
+//         const option =
+//             document.createElement("option");
+
+//         option.value = industry;
+
+//         option.textContent =
+//             industry.charAt(0).toUpperCase()
+//             + industry.slice(1);
+
+//         dropdown.appendChild(option);
+
+//     });
+   
+
+// }
+
+function populateIndustryDropdown() {
+
+    const dropdown = document.getElementById("industry");
+
+    console.log("Dropdown:", dropdown);
+
+    console.log("Industry Dataset:", industryDataset);
+
+    console.log("Keys:", Object.keys(industryDataset));
+
+    dropdown.innerHTML = '<option value="">Select Industry</option>';
+
+    Object.keys(industryDataset).forEach(industry => {
+
+        console.log("Adding:", industry);
+
+        const option = document.createElement("option");
 
         option.value = industry;
 
         option.textContent =
-            industry.charAt(0).toUpperCase()
-            + industry.slice(1);
+            industry.charAt(0).toUpperCase() + industry.slice(1);
 
         dropdown.appendChild(option);
 
     });
-    populateIndustryDropdown();
+
+    console.log("Total options:", dropdown.options.length);
 
 }
 // async function loadDashboard() {
