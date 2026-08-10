@@ -405,6 +405,300 @@ function calculateRisk(project) {
 }
 
 // ==========================================
+// SWOT ANALYSIS ENGINE
+// ==========================================
+
+function generateSWOT(project) {
+
+    const scores = calculateRisk(project);
+
+    const industryKey = (project.industry || "").toLowerCase();
+    const industryInfo = industryDataset[industryKey] || {};
+
+    const strengths = [];
+    const weaknesses = [];
+    const opportunities = [];
+    const threats = [];
+
+    const budget = Number(project.budget || 0);
+    const description = project.description || "";
+    const model = project.business_model || project.businessModel || "";
+
+    const words = description.trim() === ""
+        ? 0
+        : description.trim().split(/\s+/).length;
+
+
+    // ==============================
+    // STRENGTHS
+    // ==============================
+
+    if (budget >= 500000) {
+        strengths.push("Strong financial capacity supports business execution.");
+    }
+
+    if (scores.business <= 40) {
+        strengths.push("Business model demonstrates good scalability.");
+    }
+
+    if (scores.market <= 40) {
+        strengths.push("Market conditions are relatively favourable.");
+    }
+
+    if (words > 80) {
+        strengths.push("Project description indicates detailed planning.");
+    }
+
+    if (industryInfo.marketGrowth) {
+
+        const growth = industryInfo.marketGrowth;
+        const latestGrowth = growth[growth.length - 1];
+
+        if (latestGrowth >= 40) {
+            strengths.push("Industry is experiencing strong market growth.");
+        }
+    }
+
+
+    // ==============================
+    // WEAKNESSES
+    // ==============================
+
+    if (scores.financial >= 60) {
+        weaknesses.push("Funding level may be insufficient for large-scale execution.");
+    }
+
+    if (scores.business >= 60) {
+        weaknesses.push("Business model requires further validation.");
+    }
+
+    if (scores.execution >= 60) {
+        weaknesses.push("Execution planning and milestone definition need improvement.");
+    }
+
+    if (scores.innovation >= 60) {
+        weaknesses.push("Product differentiation and innovation could be strengthened.");
+    }
+
+    if (words < 40) {
+        weaknesses.push("Project description lacks sufficient implementation detail.");
+    }
+
+
+    // ==============================
+    // OPPORTUNITIES
+    // ==============================
+
+    if (industryInfo.marketGrowth) {
+
+        const growth = industryInfo.marketGrowth;
+        const latestGrowth = growth[growth.length - 1];
+
+        if (latestGrowth >= 20) {
+            opportunities.push("Growing industry creates opportunities for market expansion.");
+        }
+    }
+
+    if (industryInfo.competitors) {
+
+        if (industryInfo.competitors.length > 0) {
+            opportunities.push(
+                "Market gaps can be identified by analysing existing competitors."
+            );
+        }
+    }
+
+    if (model === "SaaS") {
+        opportunities.push(
+            "Scalable SaaS architecture provides opportunities for rapid expansion."
+        );
+    }
+
+    opportunities.push(
+        "Technology adoption can create opportunities for product innovation."
+    );
+
+
+    // ==============================
+    // THREATS
+    // ==============================
+
+    if (industryInfo.failureRate >= 40) {
+        threats.push(
+            `Industry has a relatively high startup failure rate of ${industryInfo.failureRate}%.`
+        );
+    }
+
+    if (scores.market >= 60) {
+        threats.push(
+            "High market risk and competitive pressure may affect growth."
+        );
+    }
+
+    if (industryInfo.competitors &&
+        industryInfo.competitors.length >= 3) {
+
+        threats.push(
+            "Established competitors may create significant barriers to entry."
+        );
+    }
+
+    threats.push(
+        "Changing customer preferences and market conditions may affect business performance."
+    );
+
+
+    // Make sure every section has at least one item
+
+    if (strengths.length === 0) {
+        strengths.push("Project has a defined business concept and target market.");
+    }
+
+    if (weaknesses.length === 0) {
+        weaknesses.push("Further validation is recommended before large-scale investment.");
+    }
+
+    if (opportunities.length === 0) {
+        opportunities.push("Potential exists for expansion into new market segments.");
+    }
+
+    if (threats.length === 0) {
+        threats.push("Competition and changing market conditions remain potential risks.");
+    }
+
+
+    return {
+        strengths,
+        weaknesses,
+        opportunities,
+        threats
+    };
+}
+
+
+// ==========================================
+// FEASIBILITY ASSESSMENT ENGINE
+// ==========================================
+
+function calculateFeasibility(project) {
+
+    const risk = calculateRisk(project);
+
+    const industryKey = (project.industry || "").toLowerCase();
+    const industryInfo = industryDataset[industryKey] || {};
+
+    const budget = Number(project.budget || 0);
+
+    // Financial feasibility
+    let financial = 50;
+
+    if (budget >= 1000000) {
+        financial = 90;
+    } else if (budget >= 500000) {
+        financial = 80;
+    } else if (budget >= 100000) {
+        financial = 65;
+    } else {
+        financial = 45;
+    }
+
+
+    // Market feasibility
+    let market = 70;
+
+    if (industryInfo.marketGrowth) {
+
+        const growth =
+            industryInfo.marketGrowth[
+                industryInfo.marketGrowth.length - 1
+            ];
+
+        if (growth >= 50) {
+            market = 90;
+        } else if (growth >= 30) {
+            market = 80;
+        } else if (growth >= 15) {
+            market = 70;
+        } else {
+            market = 55;
+        }
+    }
+
+
+    // Business model feasibility
+    let business = 60;
+
+    const model =
+        project.business_model ||
+        project.businessModel ||
+        "";
+
+    if (model === "SaaS") {
+        business = 90;
+    } else if (model === "B2B") {
+        business = 80;
+    } else if (model === "B2C") {
+        business = 70;
+    }
+
+
+    // Industry feasibility
+    let industry = 70;
+
+    if (industryInfo.failureRate !== undefined) {
+
+        const failureRate =
+            Number(industryInfo.failureRate);
+
+        industry = Math.max(
+            30,
+            100 - failureRate
+        );
+    }
+
+
+    // Execution feasibility
+    const execution =
+        100 - risk.execution;
+
+
+    // Overall feasibility
+    const overall = Math.round(
+        financial * 0.25 +
+        market * 0.25 +
+        business * 0.20 +
+        industry * 0.15 +
+        execution * 0.15
+    );
+
+
+    let status;
+
+    if (overall >= 80) {
+        status = "Highly Feasible";
+    } else if (overall >= 65) {
+        status = "Moderately Feasible";
+    } else if (overall >= 50) {
+        status = "Needs Improvement";
+    } else {
+        status = "Low Feasibility";
+    }
+
+
+    return {
+        financial,
+        market,
+        business,
+        industry,
+        execution,
+        overall,
+        status
+    };
+}
+
+//yha tk swot analysis
+
+// ==========================================
 // FEATURE SCORE ENGINE
 // ==========================================
 
@@ -508,68 +802,391 @@ function updateKPIs() {
 // AI ASSESSMENT PANEL
 // ==========================================
 
+// function updateAssessment() {
+
+//     if (projects.length === 0)
+//         return;
+
+//     const project = projects[0];
+//     const scores = calculateRisk(project);
+//     const overall = scores.overall;
+
+//     let level = "Low";
+//     if (overall > 70) level = "High";
+//     else if (overall > 40) level = "Medium";
+
+//     const findings = [];
+
+//     findings.push(scores.financial > 70
+//         ? "Funding is below the recommended level."
+//         : "Current funding is sufficient.");
+
+//     findings.push(scores.market > 70
+//         ? "Industry competition is very high."
+//         : "Market conditions are relatively favourable.");
+
+//     findings.push(scores.business > 60
+//         ? "Business model requires further validation."
+//         : "Business model appears scalable.");
+
+//     findings.push(scores.execution > 60
+//         ? "Execution strategy should be strengthened."
+//         : "Execution planning looks promising.");
+
+//     findings.push(scores.innovation > 60
+//         ? "Product differentiation could be improved."
+//         : "Innovation level is above average.");
+
+//     const report = document.querySelector(".assessment");
+
+//     report.innerHTML = `
+//         <h2><i class="fa-solid fa-file-lines"></i> AI Assessment Report</h2>
+//         <hr>
+//         <p><strong>Startup:</strong> ${project.project_name}</p>
+//         <p><strong>Industry:</strong> ${project.industry}</p>
+//         <p><strong>Business Model:</strong> ${project.business_model}</p>
+//         <p><strong>Budget:</strong> ₹${Number(project.budget).toLocaleString()}</p>
+//         <p><strong>Overall Risk:</strong> ${overall}% (${level})</p>
+//         <br>
+//         <h3>Risk Breakdown</h3>
+//         <ul>
+//             <li>Financial Risk : ${scores.financial}%</li>
+//             <li>Market Risk : ${scores.market}%</li>
+//             <li>Business Model Risk : ${scores.business}%</li>
+//             <li>Execution Risk : ${scores.execution}%</li>
+//             <li>Innovation Risk : ${scores.innovation}%</li>
+//         </ul>
+//         <br>
+//         <h3>AI Findings</h3>
+//         <ul>
+//             ${findings.map(item => `<li>${item}</li>`).join("")}
+//         </ul>
+//     `;
+
+// }
+
+// NEW ASSESSMENT PANEL
+
+// ==========================================
+// AI ASSESSMENT PANEL
+// ==========================================
+
 function updateAssessment() {
 
     if (projects.length === 0)
         return;
 
+
     const project = projects[0];
+
     const scores = calculateRisk(project);
+
     const overall = scores.overall;
 
+
+    // ==============================
+    // RISK LEVEL
+    // ==============================
+
     let level = "Low";
-    if (overall > 70) level = "High";
-    else if (overall > 40) level = "Medium";
+
+    if (overall > 70) {
+        level = "High";
+    }
+    else if (overall > 40) {
+        level = "Medium";
+    }
+
+
+    // ==============================
+    // FINDINGS
+    // ==============================
 
     const findings = [];
 
-    findings.push(scores.financial > 70
-        ? "Funding is below the recommended level."
-        : "Current funding is sufficient.");
 
-    findings.push(scores.market > 70
-        ? "Industry competition is very high."
-        : "Market conditions are relatively favourable.");
+    findings.push(
+        scores.financial > 70
+            ? "Funding is below the recommended level."
+            : "Current funding is sufficient."
+    );
 
-    findings.push(scores.business > 60
-        ? "Business model requires further validation."
-        : "Business model appears scalable.");
 
-    findings.push(scores.execution > 60
-        ? "Execution strategy should be strengthened."
-        : "Execution planning looks promising.");
+    findings.push(
+        scores.market > 70
+            ? "Industry competition is very high."
+            : "Market conditions are relatively favourable."
+    );
 
-    findings.push(scores.innovation > 60
-        ? "Product differentiation could be improved."
-        : "Innovation level is above average.");
 
-    const report = document.querySelector(".assessment");
+    findings.push(
+        scores.business > 60
+            ? "Business model requires further validation."
+            : "Business model appears scalable."
+    );
+
+
+    findings.push(
+        scores.execution > 60
+            ? "Execution strategy should be strengthened."
+            : "Execution planning looks promising."
+    );
+
+
+    findings.push(
+        scores.innovation > 60
+            ? "Product differentiation could be improved."
+            : "Innovation level is above average."
+    );
+
+
+    // ==============================
+    // SWOT
+    // ==============================
+
+    const swot = generateSWOT(project);
+
+
+    // ==============================
+    // FEASIBILITY
+    // ==============================
+
+    const feasibility =
+        calculateFeasibility(project);
+
+
+    // ==============================
+    // REPORT
+    // ==============================
+
+    const report =
+        document.querySelector(".assessment");
+
 
     report.innerHTML = `
-        <h2><i class="fa-solid fa-file-lines"></i> AI Assessment Report</h2>
+
+        <h2>
+            <i class="fa-solid fa-file-lines"></i>
+            AI Assessment Report
+        </h2>
+
         <hr>
-        <p><strong>Startup:</strong> ${project.project_name}</p>
-        <p><strong>Industry:</strong> ${project.industry}</p>
-        <p><strong>Business Model:</strong> ${project.business_model}</p>
-        <p><strong>Budget:</strong> ₹${Number(project.budget).toLocaleString()}</p>
-        <p><strong>Overall Risk:</strong> ${overall}% (${level})</p>
+
+
+        <p>
+            <strong>Startup:</strong>
+            ${project.project_name}
+        </p>
+
+        <p>
+            <strong>Industry:</strong>
+            ${project.industry}
+        </p>
+
+        <p>
+            <strong>Business Model:</strong>
+            ${project.business_model}
+        </p>
+
+        <p>
+            <strong>Budget:</strong>
+            ₹${Number(project.budget).toLocaleString()}
+        </p>
+
+        <p>
+            <strong>Overall Risk:</strong>
+            ${overall}% (${level})
+        </p>
+
+
         <br>
+
+
         <h3>Risk Breakdown</h3>
+
         <ul>
-            <li>Financial Risk : ${scores.financial}%</li>
-            <li>Market Risk : ${scores.market}%</li>
-            <li>Business Model Risk : ${scores.business}%</li>
-            <li>Execution Risk : ${scores.execution}%</li>
-            <li>Innovation Risk : ${scores.innovation}%</li>
+
+            <li>
+                Financial Risk:
+                ${scores.financial}%
+            </li>
+
+            <li>
+                Market Risk:
+                ${scores.market}%
+            </li>
+
+            <li>
+                Business Model Risk:
+                ${scores.business}%
+            </li>
+
+            <li>
+                Execution Risk:
+                ${scores.execution}%
+            </li>
+
+            <li>
+                Innovation Risk:
+                ${scores.innovation}%
+            </li>
+
         </ul>
+
+
         <br>
+
+
         <h3>AI Findings</h3>
+
         <ul>
-            ${findings.map(item => `<li>${item}</li>`).join("")}
+
+            ${findings
+                .map(item => `<li>${item}</li>`)
+                .join("")}
+
         </ul>
+
+
+        <br>
+
+
+        <!-- ================================= -->
+        <!-- FEASIBILITY -->
+        <!-- ================================= -->
+
+        <h3>
+            <i class="fa-solid fa-chart-line"></i>
+            Project Feasibility
+        </h3>
+
+        <div class="feasibility-summary">
+
+            <div class="feasibility-score">
+                <strong>
+                    ${feasibility.overall}%
+                </strong>
+
+                <span>
+                    ${feasibility.status}
+                </span>
+            </div>
+
+        </div>
+
+
+        <ul>
+
+            <li>
+                Financial Feasibility:
+                ${feasibility.financial}%
+            </li>
+
+            <li>
+                Market Feasibility:
+                ${feasibility.market}%
+            </li>
+
+            <li>
+                Business Model:
+                ${feasibility.business}%
+            </li>
+
+            <li>
+                Industry Conditions:
+                ${feasibility.industry}%
+            </li>
+
+            <li>
+                Execution Readiness:
+                ${feasibility.execution}%
+            </li>
+
+        </ul>
+
+
+        <br>
+
+
+        <!-- ================================= -->
+        <!-- SWOT ANALYSIS -->
+        <!-- ================================= -->
+
+        <h3>
+            <i class="fa-solid fa-table-cells"></i>
+            SWOT Analysis
+        </h3>
+
+
+        <div class="swot-grid">
+
+
+            <div class="swot-card strengths">
+
+                <h4>Strengths</h4>
+
+                <ul>
+
+                    ${swot.strengths
+                        .map(item => `<li>${item}</li>`)
+                        .join("")}
+
+                </ul>
+
+            </div>
+
+
+            <div class="swot-card weaknesses">
+
+                <h4>Weaknesses</h4>
+
+                <ul>
+
+                    ${swot.weaknesses
+                        .map(item => `<li>${item}</li>`)
+                        .join("")}
+
+                </ul>
+
+            </div>
+
+
+            <div class="swot-card opportunities">
+
+                <h4>Opportunities</h4>
+
+                <ul>
+
+                    ${swot.opportunities
+                        .map(item => `<li>${item}</li>`)
+                        .join("")}
+
+                </ul>
+
+            </div>
+
+
+            <div class="swot-card threats">
+
+                <h4>Threats</h4>
+
+                <ul>
+
+                    ${swot.threats
+                        .map(item => `<li>${item}</li>`)
+                        .join("")}
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
     `;
 
 }
+
 
 // ==========================================
 // CHARTS

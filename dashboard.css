@@ -289,3 +289,128 @@ transform:translateY(-8px);
     margin-bottom:25px;
 
 }
+
+/* ==========================================
+   FEASIBILITY
+========================================== */
+
+.feasibility-summary {
+    margin: 15px 0;
+}
+
+.feasibility-score {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.feasibility-score strong {
+    font-size: 32px;
+    color: #4F46E5;
+}
+
+.feasibility-score span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+}
+
+
+/* ==========================================
+   SWOT GRID
+========================================== */
+
+.swot-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-top: 15px;
+
+}
+
+
+.swot-card {
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #eef1f6;
+
+}
+
+
+.swot-card h4 {
+
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+
+}
+
+
+.swot-card ul {
+
+    margin: 0;
+
+    padding-left: 20px;
+
+}
+
+
+.swot-card li {
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+/* SWOT headings */
+
+.swot-card.strengths h4 {
+    color: #16a34a;
+}
+
+
+.swot-card.weaknesses h4 {
+    color: #ea580c;
+}
+
+
+.swot-card.opportunities h4 {
+    color: #2563eb;
+}
+
+
+.swot-card.threats h4 {
+    color: #dc2626;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .swot-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
