@@ -54,6 +54,12 @@
                 Competitor Analysis
             </li>
 
+            <li id="agentBtn">
+                <i class="fa-solid fa-brain"></i>
+                Strategic AI Agents
+                <!-- <span class="m3-badge">M3</span> -->
+            </li>
+
             <li id="datasetBtn">
                 <i class="fa-solid fa-database"></i>
                 Dataset
@@ -84,6 +90,10 @@
                 <input
                     type="text"
                     placeholder="Search startup...">
+
+                <button id="aiSettingsNavBtn" class="ai-nav-btn" title="AI Model Configuration">
+                    <i class="fa-solid fa-robot"></i> AI Engine
+                </button>
 
                 <i class="fa-regular fa-bell"></i>
 
@@ -212,27 +222,29 @@
 
                             </div>
 
-                            <!-- <div class="form-group">
-
-                                <label>Industry</label>
-
-                                <input
-                                    type="text"
-                                    id="industry"
-                                    required>
-
-                            </div> -->
                             <div class="form-group">
 
-    <label>Industry</label>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <label style="margin-bottom:0;">Industry Sector</label>
+                                    <button type="button" id="toggleCustomIndustryBtn" class="link-btn" style="background:none; border:none; color:#4f46e5; font-size:12px; font-weight:600; cursor:pointer;">
+                                        + Custom Industry
+                                    </button>
+                                </div>
 
-    <select id="industry" required>
+                                <div id="standardIndustrySelectWrapper">
+                                    <select id="industry" required>
+                                        <option value="">Select Industry</option>
+                                    </select>
+                                </div>
 
-        <option value="">Select Industry</option>
+                                <div id="customIndustryInputWrapper" style="display:none; gap:8px;">
+                                    <input type="text" id="customIndustryInput" placeholder="e.g. Agritech, CleanTech, Gaming...">
+                                    <button type="button" id="aiResearchIndustryBtn" class="ai-ind-quick-btn" title="Generate Live Market Data with Gemini">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Research
+                                    </button>
+                                </div>
 
-    </select>
-
-</div>
+                            </div>
 
                         </div>
 
@@ -311,7 +323,7 @@
 
             <section class="chart-grid">
 
-                                <div class="chart-card">
+                <div class="chart-card">
 
                     <h3>Industry Distribution</h3>
 
@@ -490,6 +502,12 @@
 
                     </div>
 
+                    <div style="margin-top: 15px;">
+                        <button id="deepDiveAgentBtn" class="agent-cta-btn">
+                            <i class="fa-solid fa-brain"></i> Run Deep Strategic Reasoning Agent &rarr;
+                        </button>
+                    </div>
+
                 </div>
 
             </section>
@@ -518,16 +536,30 @@
 
         </section>
 
-                <!-- ========================================= -->
+        <!-- ========================================= -->
         <!-- MARKET TRENDS PAGE -->
         <!-- ========================================= -->
 
         <section id="marketPage" class="page" style="display:none;">
 
-            <h2 class="section-title">
-                <i class="fa-solid fa-chart-line"></i>
-                Market Trends
-            </h2>
+            <div class="market-toolbar-card">
+                <div class="market-toolbar-left">
+                    <h2 class="section-title" style="margin-bottom:0;">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Market Trends
+                    </h2>
+                    <p style="font-size:12px; color:#64748b; margin-top:2px;">Live benchmark metrics generated and refreshed via Gemini API.</p>
+                </div>
+                <div class="market-toolbar-controls">
+                    <select id="marketIndustrySelect" class="market-ind-select">
+                        <!-- Populated dynamically -->
+                    </select>
+                    <input type="text" id="marketCustomIndInput" placeholder="Research custom industry (e.g. Agritech)..." class="market-ind-input">
+                    <button id="marketGenAiBtn" class="ai-gen-ind-btn">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Research with Gemini
+                    </button>
+                </div>
+            </div>
 
             <div class="chart-grid">
 
@@ -574,13 +606,23 @@
 
         <section id="competitorPage" class="page" style="display:none;">
 
-            <h2 class="section-title">
-
-                <i class="fa-solid fa-building"></i>
-
-                Competitor Analysis
-
-            </h2>
+            <div class="market-toolbar-card">
+                <div class="market-toolbar-left">
+                    <h2 class="section-title" style="margin-bottom:0;">
+                        <i class="fa-solid fa-building"></i>
+                        Competitor Analysis
+                    </h2>
+                    <p style="font-size:12px; color:#64748b; margin-top:2px;">Market share, revenue, and funding comparisons for industry incumbents.</p>
+                </div>
+                <div class="market-toolbar-controls">
+                    <select id="competitorIndustrySelect" class="market-ind-select">
+                        <!-- Populated dynamically -->
+                    </select>
+                    <button id="competitorRefreshBtn" class="ai-gen-ind-btn">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh Market Competitors
+                    </button>
+                </div>
+            </div>
 
             <div class="chart-grid">
 
@@ -591,6 +633,7 @@
                     <canvas id="marketShareChart"></canvas>
 
                 </div>
+
 
                 <div class="chart-card">
 
@@ -616,6 +659,280 @@
 
                 </div>
 
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- STRATEGIC AI AGENTS PAGE (MILESTONE 3) -->
+        <!-- ========================================= -->
+
+        <section id="agentPage" class="page" style="display:none;">
+
+            <div class="agent-header-card">
+                <div class="agent-header-info">
+                    <!-- <div class="agent-badge"><i class="fa-solid fa-sparkles"></i> Milestone 3 Intelligence Suite</div> -->
+                    <h2>LangGraph Agent Workflow & Strategic Reasoning</h2>
+                    <p>Multi-agent autonomous graph orchestrating Benchmark Audits, FMEA Diagnostics, and Gemini/OpenAI Strategic Playbooks.</p>
+                </div>
+                <div class="agent-controls">
+                    <div class="agent-select-group">
+                        <label><i class="fa-solid fa-microchip"></i> Active Model:</label>
+                        <select id="agentModelSelector">
+                            <option value="gemini-2.0-flash">Google Gemini 2.0 Flash (Recommended)</option>
+                            <option value="gemini-1.5-flash">Google Gemini 1.5 Flash</option>
+                            <option value="gemini-1.5-pro">Google Gemini 1.5 Pro</option>
+                            <option value="gpt-4o">OpenAI GPT-4o</option>
+                            <option value="gpt-4o-mini">OpenAI GPT-4o Mini</option>
+                            <option value="heuristic">Built-in VC Heuristic Engine</option>
+                        </select>
+                    </div>
+                    <button id="runWorkflowBtn" class="run-workflow-btn">
+                        <i class="fa-solid fa-play"></i> Execute Agent Workflow
+                    </button>
+                    <button id="openAiSettingsBtn" class="settings-btn" title="Configure API Keys">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- LANGGRAPH VISUAL PIPELINE -->
+            <div class="agent-workflow-card">
+                <div class="workflow-header">
+                    <h3><i class="fa-solid fa-network-wired"></i> LangGraph Agent Pipeline Execution</h3>
+                    <span id="workflowStatusBadge" class="status-pill status-ready">Status: Ready</span>
+                </div>
+
+                <div class="pipeline-graph">
+                    <!-- Node 1 -->
+                    <div class="graph-node" id="node-benchmark">
+                        <div class="node-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="node-content">
+                            <h4>1. Benchmarking Agent</h4>
+                            <p>Industry baseline & competitor parity</p>
+                            <span class="node-tag">Data Ingest</span>
+                        </div>
+                        <div class="node-status"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+
+                    <div class="graph-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+                    <!-- Node 2 -->
+                    <div class="graph-node" id="node-fmea">
+                        <div class="node-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="node-content">
+                            <h4>2. FMEA Diagnostic Agent</h4>
+                            <p>Failure mode & severity rating</p>
+                            <span class="node-tag">Risk Auditor</span>
+                        </div>
+                        <div class="node-status"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+
+                    <div class="graph-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+                    <!-- Node 3 -->
+                    <div class="graph-node" id="node-mitigation">
+                        <div class="node-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="node-content">
+                            <h4>3. Mitigation Planner</h4>
+                            <p>30/60/90-Day phased actions</p>
+                            <span class="node-tag">Strategy Engine</span>
+                        </div>
+                        <div class="node-status"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+
+                    <div class="graph-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+                    <!-- Node 4 -->
+                    <div class="graph-node" id="node-synthesis">
+                        <div class="node-icon"><i class="fa-solid fa-brain"></i></div>
+                        <div class="node-content">
+                            <h4>4. Executive Synthesizer</h4>
+                            <p>Gemini/OpenAI Strategic Playbook</p>
+                            <span class="node-tag">Synthesis</span>
+                        </div>
+                        <div class="node-status"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                </div>
+
+                <!-- Execution Terminal Logs -->
+                <div class="agent-logs-container">
+                    <div class="logs-header">
+                        <span><i class="fa-solid fa-terminal"></i> Agent Execution Trace & Reasoning Log</span>
+                        <button id="clearLogsBtn" class="clear-logs-btn">Clear Logs</button>
+                    </div>
+                    <div id="agentLogsTerminal" class="logs-terminal">
+                        <div class="log-line info">[System] LangGraph Workflow engine initialized. Select a startup and click 'Execute Agent Workflow'.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STRATEGIC REASONING & EXECUTIVE THESIS (OUTPUT) -->
+            <div class="strategic-results-grid">
+                <!-- Executive Thesis & Strategic Pillars -->
+                <div class="strategic-card thesis-card">
+                    <div class="card-header-flex">
+                        <h3><i class="fa-solid fa-compass"></i> Strategic Thesis & VC Verdict</h3>
+                        <div class="confidence-badge" id="aiConfidenceBadge">Confidence: 88%</div>
+                    </div>
+                    <p id="agentExecutiveThesis" class="executive-thesis-text">
+                        Run the agent workflow to generate a context-aware strategic thesis combining industry failure modes with tailored capital allocation strategies.
+                    </p>
+                    <hr>
+                    <h4>Key Strategic Levers</h4>
+                    <div id="strategicPillarsContainer" class="strategic-pillars-list">
+                        <div class="pillar-box">
+                            <strong>1. Runway & Financial Architecture</strong>
+                            <p>Waiting for workflow execution...</p>
+                        </div>
+                        <div class="pillar-box">
+                            <strong>2. Market Wedge & Competitor Shield</strong>
+                            <p>Waiting for workflow execution...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Failure Mode & Effects Analysis (FMEA) -->
+                <div class="strategic-card fmea-card">
+                    <h3><i class="fa-solid fa-virus-slash"></i> FMEA Risk Diagnostics</h3>
+                    <div id="fmeaListContainer" class="fmea-list">
+                        <div class="fmea-item">
+                            <span class="fmea-badge badge-critical">CRITICAL</span>
+                            <div class="fmea-details">
+                                <strong>Premature Capital Depletion</strong>
+                                <p>Initial budget limits runway to under 10 months.</p>
+                            </div>
+                        </div>
+                        <div class="fmea-item">
+                            <span class="fmea-badge badge-high">HIGH</span>
+                            <div class="fmea-details">
+                                <strong>Incumbent Commoditization</strong>
+                                <p>High market concentration among established leaders.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MITIGATION ROADMAP MATRIX -->
+            <div class="mitigation-roadmap-card">
+                <h3><i class="fa-solid fa-list-check"></i> Actionable Mitigation Roadmap (Phased Execution)</h3>
+                <div class="roadmap-grid">
+                    <!-- Phase 1 -->
+                    <div class="phase-column">
+                        <div class="phase-header phase-30">
+                            <i class="fa-solid fa-fire"></i>
+                            <span>Immediate 0-30 Days (Triage)</span>
+                        </div>
+                        <div id="phase30Container" class="phase-actions">
+                            <div class="action-card">
+                                <span class="action-tag">Financial</span>
+                                <h4>Runway Extension Audit</h4>
+                                <p>Cap fixed monthly burn and extend operational buffer.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="phase-column">
+                        <div class="phase-header phase-60">
+                            <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                            <span>Short-Term 30-60 Days (Pivots)</span>
+                        </div>
+                        <div id="phase60Container" class="phase-actions">
+                            <div class="action-card">
+                                <span class="action-tag">GTM</span>
+                                <h4>Defensive Niche Positioning</h4>
+                                <p>Carve out an underserved sub-vertical avoiding head-on conflict.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="phase-column">
+                        <div class="phase-header phase-90">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Long-Term 60-90+ Days (Scale)</span>
+                        </div>
+                        <div id="phase90Container" class="phase-actions">
+                            <div class="action-card">
+                                <span class="action-tag">Growth</span>
+                                <h4>Product-Led Referral Loops</h4>
+                                <p>Embed organic virality triggers to cut CAC sustainably.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WHAT-IF SCENARIO SIMULATOR -->
+            <div class="simulator-card">
+                <div class="card-header-flex">
+                    <div>
+                        <h3><i class="fa-solid fa-sliders"></i> "What-If" Strategic Scenario Simulator</h3>
+                        <p>Adjust strategic variables to simulate real-time risk reduction and runway improvements.</p>
+                    </div>
+                    <span class="sim-badge">Dynamic Recalibration</span>
+                </div>
+
+                <div class="simulator-body">
+                    <div class="sim-controls">
+                        <div class="sim-control-group">
+                            <div class="control-label-row">
+                                <label>Additional Capital / Budget Increase</label>
+                                <span id="budgetDeltaVal" class="slider-val">+0%</span>
+                            </div>
+                            <input type="range" id="budgetDeltaSlider" min="-50" max="200" step="10" value="0">
+                        </div>
+
+                        <div class="sim-control-group">
+                            <div class="control-label-row">
+                                <label>Operational Burn Rate Reduction</label>
+                                <span id="burnReductionVal" class="slider-val">0%</span>
+                            </div>
+                            <input type="range" id="burnReductionSlider" min="0" max="60" step="5" value="0">
+                        </div>
+
+                        <div class="sim-control-group">
+                            <label>Go-to-Market Strategy Pivot</label>
+                            <select id="simGtmPivot">
+                                <option value="none">Baseline Strategy</option>
+                                <option value="niche_b2b">Verticalized Niche B2B Focus (-8% Risk)</option>
+                                <option value="product_led">Product-Led Growth Loop (-10% Risk)</option>
+                                <option value="annual_contracts">Annual Upfront Contract Billing (-7% Risk)</option>
+                            </select>
+                        </div>
+
+                        <div class="sim-control-group">
+                            <label>Team Capability & Advisor Profile</label>
+                            <select id="simTeamProfile">
+                                <option value="moderate">First-Time Founding Team</option>
+                                <option value="expert">Experienced Domain Veterans (-12% Risk)</option>
+                                <option value="serial_founder">Serial Founders with VC Backing (-16% Risk)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="sim-results">
+                        <div class="sim-stat-box">
+                            <span class="sim-stat-title">Baseline Risk</span>
+                            <h2 id="simBaseRiskVal" class="stat-red">72%</h2>
+                        </div>
+
+                        <div class="sim-stat-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                        <div class="sim-stat-box highlight-box">
+                            <span class="sim-stat-title">Simulated Risk</span>
+                            <h2 id="simNewRiskVal" class="stat-green">54%</h2>
+                            <span id="simRiskDeltaTag" class="delta-tag">-18% Improvement</span>
+                        </div>
+
+                        <div class="sim-stat-box">
+                            <span class="sim-stat-title">Est. Runway Buffer</span>
+                            <h2 id="simRunwayVal" class="stat-blue">14 Mo.</h2>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </section>
@@ -667,6 +984,44 @@
 
     </main>
 
+</div>
+
+<!-- AI CONFIGURATION MODAL -->
+<div id="aiConfigModal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-key"></i> AI Model & API Configuration</h3>
+            <button id="closeAiConfigModalBtn" class="close-modal-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-subtitle">Configure your live Gemini or OpenAI API keys. The system also includes an intelligent built-in heuristic reasoning engine for instant out-of-the-box operation.</p>
+
+            <div class="form-group">
+                <label>Primary AI Provider</label>
+                <select id="modalAiProvider">
+                    <option value="gemini">Google Gemini (Gemini 2.0 / 1.5)</option>
+                    <option value="openai">OpenAI (GPT-4o)</option>
+                    <option value="heuristic">Built-in VC Heuristic Engine</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="geminiKeyGroup">
+                <label>Google Gemini API Key</label>
+                <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy...">
+                <small>Get your free key at <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>.</small>
+            </div>
+
+            <div class="form-group" id="openaiKeyGroup" style="display:none;">
+                <label>OpenAI API Key</label>
+                <input type="password" id="openaiApiKeyInput" placeholder="sk-proj-...">
+                <small>Get your key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>.</small>
+            </div>
+
+            <div class="modal-actions">
+                <button id="saveAiConfigBtn" class="submitbtn">Save Configuration</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="dashboard.js"></script>

@@ -1,216 +1,366 @@
 {
     "healthcare": {
-
-        "marketGrowth": [10, 12, 15, 19, 23, 28],
-
-        "funding": [8, 12, 18, 24, 30, 38],
-
-        "failureRate": 42,
-
-        "investmentDistribution": [35, 22, 18, 15, 10],
-
+        "marketGrowth": [
+            16,
+            22,
+            28,
+            36,
+            45,
+            55
+        ],
+        "funding": [
+            17,
+            22,
+            28,
+            35,
+            43,
+            52
+        ],
+        "failureRate": 56,
+        "investmentDistribution": [
+            31,
+            24,
+            20,
+            15,
+            10
+        ],
         "competitors": [
-
             {
-                "name": "Practo",
-                "marketShare": 32,
-                "revenue": 180,
-                "funding": 300
+                "name": "HealthcarePrime",
+                "marketShare": 34,
+                "revenue": 391,
+                "funding": 941
             },
-
             {
-                "name": "1mg",
+                "name": "NexusHealthcare",
                 "marketShare": 24,
-                "revenue": 160,
-                "funding": 250
+                "revenue": 201,
+                "funding": 561
             },
-
             {
-                "name": "HealthifyMe",
+                "name": "ApexHealthcare",
                 "marketShare": 18,
-                "revenue": 90,
-                "funding": 150
+                "revenue": 251,
+                "funding": 361
             },
-
             {
-                "name": "MFine",
+                "name": "Vanguard Healthcare",
                 "marketShare": 12,
-                "revenue": 60,
-                "funding": 100
+                "revenue": 111,
+                "funding": 181
             }
-
         ]
     },
-
     "AI": {
-
-        "marketGrowth": [12, 18, 28, 40, 58, 75],
-
-        "funding": [20, 40, 70, 110, 180, 250],
-
+        "marketGrowth": [
+            12,
+            18,
+            28,
+            40,
+            58,
+            75
+        ],
+        "funding": [
+            20,
+            40,
+            70,
+            110,
+            180,
+            250
+        ],
         "failureRate": 25,
-
-        "investmentDistribution": [42, 20, 15, 13, 10],
-
+        "investmentDistribution": [
+            42,
+            20,
+            15,
+            13,
+            10
+        ],
         "competitors": [
-
             {
                 "name": "OpenAI",
                 "marketShare": 45,
                 "revenue": 12000,
                 "funding": 18000
             },
-
             {
                 "name": "Anthropic",
                 "marketShare": 20,
                 "revenue": 1500,
                 "funding": 8000
             },
-
             {
                 "name": "Perplexity",
                 "marketShare": 12,
                 "revenue": 300,
                 "funding": 1000
             },
-
             {
                 "name": "Cohere",
                 "marketShare": 10,
                 "revenue": 250,
                 "funding": 900
             }
-
         ]
     },
-
     "fintech": {
-
-        "marketGrowth": [15, 20, 25, 33, 41, 50],
-
-        "funding": [10, 18, 28, 35, 44, 55],
-
+        "marketGrowth": [
+            15,
+            20,
+            25,
+            33,
+            41,
+            50
+        ],
+        "funding": [
+            10,
+            18,
+            28,
+            35,
+            44,
+            55
+        ],
         "failureRate": 38,
-
-        "investmentDistribution": [30, 25, 18, 15, 12],
-
+        "investmentDistribution": [
+            30,
+            25,
+            18,
+            15,
+            12
+        ],
         "competitors": [
-
             {
                 "name": "PhonePe",
                 "marketShare": 35,
                 "revenue": 2200,
                 "funding": 6000
             },
-
             {
                 "name": "Paytm",
                 "marketShare": 28,
                 "revenue": 1800,
                 "funding": 4500
             },
-
             {
                 "name": "Razorpay",
                 "marketShare": 20,
                 "revenue": 1200,
                 "funding": 2000
             },
-
             {
                 "name": "CRED",
                 "marketShare": 10,
                 "revenue": 700,
                 "funding": 900
             }
-
         ]
     },
-
     "edtech": {
-
-        "marketGrowth": [8, 14, 24, 32, 26, 21],
-
-        "funding": [6, 12, 18, 27, 30, 28],
-
-        "failureRate": 48,
-
-        "investmentDistribution": [28, 22, 20, 18, 12],
-
+        "marketGrowth": [
+            16,
+            22,
+            28,
+            36,
+            45,
+            55
+        ],
+        "funding": [
+            17,
+            26,
+            36,
+            47,
+            59,
+            72
+        ],
+        "failureRate": 56,
+        "investmentDistribution": [
+            31,
+            24,
+            20,
+            15,
+            10
+        ],
         "competitors": [
-
             {
-                "name": "BYJU'S",
+                "name": "EdtechPrime",
                 "marketShare": 34,
-                "revenue": 900,
-                "funding": 5500
+                "revenue": 271,
+                "funding": 521
             },
-
             {
-                "name": "Unacademy",
-                "marketShare": 22,
-                "revenue": 500,
-                "funding": 1500
+                "name": "NexusEdtech",
+                "marketShare": 24,
+                "revenue": 181,
+                "funding": 541
             },
-
             {
-                "name": "PhysicsWallah",
+                "name": "ApexEdtech",
                 "marketShare": 18,
-                "revenue": 300,
-                "funding": 300
+                "revenue": 131,
+                "funding": 241
             },
-
             {
-                "name": "Vedantu",
+                "name": "Vanguard Edtech",
                 "marketShare": 12,
-                "revenue": 200,
-                "funding": 250
+                "revenue": 91,
+                "funding": 161
             }
-
         ]
     },
-
     "travel": {
-
-        "marketGrowth": [6, 9, 12, 15, 20, 25],
-
-        "funding": [4, 7, 11, 18, 24, 30],
-
-        "failureRate": 61,
-
-        "investmentDistribution": [20, 18, 22, 24, 16],
-
+        "marketGrowth": [
+            19,
+            22,
+            25,
+            30,
+            36,
+            43
+        ],
+        "funding": [
+            14,
+            24,
+            35,
+            47,
+            60,
+            74
+        ],
+        "failureRate": 54,
+        "investmentDistribution": [
+            34,
+            21,
+            20,
+            15,
+            10
+        ],
         "competitors": [
-
             {
-                "name": "MakeMyTrip",
-                "marketShare": 38,
-                "revenue": 720,
-                "funding": 900
+                "name": "TravelPrime",
+                "marketShare": 34,
+                "revenue": 304,
+                "funding": 554
             },
-
             {
-                "name": "EaseMyTrip",
-                "marketShare": 20,
-                "revenue": 220,
-                "funding": 300
+                "name": "NexusTravel",
+                "marketShare": 24,
+                "revenue": 214,
+                "funding": 574
             },
-
             {
-                "name": "Yatra",
-                "marketShare": 16,
-                "revenue": 180,
-                "funding": 250
+                "name": "ApexTravel",
+                "marketShare": 18,
+                "revenue": 164,
+                "funding": 274
             },
-
             {
-                "name": "ixigo",
-                "marketShare": 14,
-                "revenue": 160,
-                "funding": 200
+                "name": "Vanguard Travel",
+                "marketShare": 12,
+                "revenue": 124,
+                "funding": 194
             }
-
+        ]
+    },
+    "agritech": {
+        "marketGrowth": [
+            24,
+            32,
+            40,
+            50,
+            61,
+            73
+        ],
+        "funding": [
+            19,
+            30,
+            42,
+            55,
+            69,
+            84
+        ],
+        "failureRate": 64,
+        "investmentDistribution": [
+            39,
+            21,
+            20,
+            15,
+            5
+        ],
+        "competitors": [
+            {
+                "name": "AgritechPrime",
+                "marketShare": 34,
+                "revenue": 489,
+                "funding": 739
+            },
+            {
+                "name": "NexusAgritech",
+                "marketShare": 24,
+                "revenue": 199,
+                "funding": 359
+            },
+            {
+                "name": "ApexAgritech",
+                "marketShare": 18,
+                "revenue": 199,
+                "funding": 459
+            },
+            {
+                "name": "Vanguard Agritech",
+                "marketShare": 12,
+                "revenue": 109,
+                "funding": 179
+            }
+        ]
+    },
+    "e commerce": {
+        "marketGrowth": [
+            11,
+            18,
+            25,
+            34,
+            44,
+            55
+        ],
+        "funding": [
+            12,
+            16,
+            21,
+            27,
+            34,
+            42
+        ],
+        "failureRate": 61,
+        "investmentDistribution": [
+            36,
+            24,
+            20,
+            15,
+            5
+        ],
+        "competitors": [
+            {
+                "name": "E commercePrime",
+                "marketShare": 34,
+                "revenue": 326,
+                "funding": 876
+            },
+            {
+                "name": "NexusE commerce",
+                "marketShare": 24,
+                "revenue": 336,
+                "funding": 496
+            },
+            {
+                "name": "ApexE commerce",
+                "marketShare": 18,
+                "revenue": 186,
+                "funding": 296
+            },
+            {
+                "name": "Vanguard E commerce",
+                "marketShare": 12,
+                "revenue": 146,
+                "funding": 316
+            }
         ]
     }
 }
