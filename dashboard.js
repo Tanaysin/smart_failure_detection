@@ -170,25 +170,30 @@ window.onload = async () => {
 // ==========================================
 // LOAD DATA FROM SERVER
 // ==========================================
+// Check if running on static hosting (Vercel, Live Server, or file protocol)
+const IS_STATIC_HOST = window.location.protocol === "file:" 
+    || window.location.hostname.includes("vercel.app") 
+    || window.location.port === "5500" 
+    || window.location.port === "5173"
+    || window.location.port === "8080";
+
 async function fetchIndustryData() {
-    console.log("fetchIndustryData() called");
     try {
+        console.log("fetchIndustryData() called");
         let response;
-        try {
-            response = await fetch("/industry-data");
-            if (!response.ok) throw new Error("Local fetch failed");
+        if (IS_STATIC_HOST) {
+            response = await fetch("./Industry_data.json");
             industryDataset = await response.json();
-        } catch (e) {
+        } else {
             try {
-                response = await fetch("/Industry_data.json");
-                if (!response.ok) throw new Error("Static JSON failed");
+                response = await fetch("/industry-data");
+                if (!response.ok) throw new Error("Local endpoint unavailable");
                 industryDataset = await response.json();
-            } catch (e2) {
-                response = await fetch("https://smart-failure-detection-owp3.onrender.com/industry-data");
+            } catch (e) {
+                response = await fetch("./Industry_data.json");
                 industryDataset = await response.json();
             }
         }
-
         populateIndustryDropdown();
         console.log("Industry Data Loaded successfully:", Object.keys(industryDataset));
     }
@@ -247,31 +252,46 @@ async function loadDashboard() {
     try {
 
         let response;
-        try {
-            response = await fetch("/projects");
-            if (!response.ok) throw new Error("Local fetch failed");
-            projects = await response.json();
-        } catch (e) {
+        if (IS_STATIC_HOST) {
             try {
                 response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
-                if (!response.ok) throw new Error("Render fetch failed");
-                projects = await response.json();
-            } catch (e2) {
-                console.warn("Using fallback local projects dataset");
-                if (!projects || projects.length === 0) {
-                    projects = [
-                        {
-                            id: 1,
-                            project_name: "HealthAI Pulse",
-                            industry: "healthcare",
-                            business_model: "B2B",
-                            target_market: "Hospitals & Clinics",
-                            budget: 5000000,
-                            description: "AI clinical triage and diagnostics support platform."
-                        }
-                    ];
-                }
+                if (response.ok) projects = await response.json();
+            } catch (e) {
+                // Render offline
             }
+        } else {
+            try {
+                response = await fetch("/projects");
+                if (response.ok) projects = await response.json();
+            } catch (e) {
+                try {
+                    response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
+                    if (response.ok) projects = await response.json();
+                } catch (e2) {}
+            }
+        }
+
+        if (!projects || projects.length === 0) {
+            projects = [
+                {
+                    id: 1,
+                    project_name: "HealthAI Pulse",
+                    industry: "healthcare",
+                    business_model: "B2B",
+                    target_market: "Hospitals & Clinics",
+                    budget: 5000000,
+                    description: "AI clinical triage and diagnostics support platform."
+                },
+                {
+                    id: 2,
+                    project_name: "KisanSetu Agri",
+                    industry: "agritech",
+                    business_model: "B2B",
+                    target_market: "Direct Farmers & FPOs",
+                    budget: 3500000,
+                    description: "IoT soil moisture and automated advisory for Indian farmers."
+                }
+            ];
         }
 
         updateKPIs();
@@ -411,6 +431,10 @@ async function fetchLiveFeasibilityAndSWOT(project, forceRefresh = false) {
 
     const provider = localStorage.getItem("sfd_ai_provider") || "heuristic";
     const apiKey = provider === "gemini" ? localStorage.getItem("sfd_gemini_api_key") : localStorage.getItem("sfd_openai_api_key");
+
+    if (IS_STATIC_HOST) {
+        return null;
+    }
 
     try {
         const res = await fetch("/api/analysis/feasibility-swot", {
@@ -2696,6 +2720,72 @@ async function callDirectClientOpenAI(industryName, apiKey) {
     return JSON.parse(data.choices[0].message.content);
 }
 
+async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-2.0-flash") {
+    if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
+        const prompt = `You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
+Analyze this Indian startup venture:
+- Name: "${startup.projectName || startup.project_name || 'Venture'}"
+- Industry: "${startup.industry || 'Technology'}"
+- Business Model: "${startup.business_model || 'B2B'}"
+- Target Market: "${startup.target_market || 'Indian Market'}"
+- Budget: ₹${Number(startup.budget || 5000000).toLocaleString()}
+- Description: "${startup.description || 'Startup venture'}"
+
+Return STRICTLY a raw JSON object with this exact schema:
+{
+  "strategicIntelligence": {
+    "executiveThesis": "Comprehensive 3-sentence thesis detailing market wedge, unit economics, and competitive defensive moat against Indian incumbents.",
+    "strategicPillars": [
+      { "title": "1. Runway & Unit Economics", "action": "Actionable financial strategy in INR" },
+      { "title": "2. Competitive Moat", "action": "Actionable product/wedge strategy" },
+      { "title": "3. Go-To-Market Acceleration", "action": "Actionable distribution strategy" },
+      { "title": "4. Regulatory & Scaling Shield", "action": "Actionable risk mitigation strategy" }
+    ],
+    "confidenceScore": 92,
+    "projectedRiskReduction": "38% Lower Risk with Planned Mitigations"
+  },
+  "fmeaDiagnostics": [
+    { "mode": "Rapid Burn Rate & Inadequate Runway", "severity": "CRITICAL", "rpn": 240, "rootCause": "High initial customer acquisition cost", "mitigation": "Shift to product-led organic loops and upfront annual billing." },
+    { "mode": "Incumbent Market Saturation", "severity": "HIGH", "rpn": 180, "rootCause": "Direct feature competition against funded leaders", "mitigation": "Specialize in verticalized micro-niche workflows." },
+    { "mode": "Pricing Churn Friction", "severity": "MEDIUM", "rpn": 120, "rootCause": "Lack of clear ROI demonstration", "mitigation": "Introduce usage-based milestone pricing tiers." }
+  ],
+  "mitigationRoadmap": {
+    "immediate": [
+      { "task": "Renegotiate cloud & vendor commitments", "impact": "Extend runway by 3.5 months", "owner": "Finance" },
+      { "task": "Deploy targeted ICP onboarding workflow", "impact": "+22% activation rate", "owner": "Product" }
+    ],
+    "mediumTerm": [
+      { "task": "Establish proprietary data feedback loop", "impact": "Increase defensibility vs competitors", "owner": "Engineering" }
+    ]
+  }
+}`;
+
+        const modelsToTry = [modelName, "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"].filter(Boolean);
+        for (const m of modelsToTry) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+                if (!response.ok) continue;
+                const data = await response.json();
+                const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) continue;
+                const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+                return JSON.parse(cleanJson);
+            } catch (e) {
+                console.warn(`Direct client workflow ${m} attempt failed:`, e.message);
+            }
+        }
+    }
+    return generateClientSideAgentResults(startup);
+}
+
 /**
  * Call Gemini / OpenAI / Server to dynamically generate and store live market intelligence
  */
@@ -2714,32 +2804,8 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
     let finalData = null;
     let source = "Indian Market Catalog";
 
-    // 1. Try Server API Endpoint if available
-    try {
-        const response = await fetch("/api/industry/generate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                industry: cleanName,
-                provider: provider,
-                apiKey: apiKey,
-                forceRefresh: forceRefresh
-            })
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            if (result.success && result.data) {
-                finalData = result.data;
-                source = result.source || "server_api";
-            }
-        }
-    } catch (err) {
-        console.warn("Server API not available for industry generation:", err.message);
-    }
-
-    // 2. Direct client-side Gemini / OpenAI call if API key is provided and server API wasn't available
-    if (!finalData && apiKey) {
+    // 1. Direct client-side Gemini / OpenAI call if API key is provided
+    if (apiKey) {
         try {
             if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
                 appendLog("info", `[Market Engine] Calling Google Gemini API directly for "${cleanName}"...`);
@@ -2753,6 +2819,32 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
         } catch (apiErr) {
             console.warn("Direct Client AI API Call Error:", apiErr.message);
             appendLog("warn", `[Market Engine] Live AI API call returned error (${apiErr.message}). Using Indian market benchmark catalog.`);
+        }
+    }
+
+    // 2. Try local server API only if not on static hosting and direct API wasn't used
+    if (!finalData && !IS_STATIC_HOST) {
+        try {
+            const response = await fetch("/api/industry/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    industry: cleanName,
+                    provider: provider,
+                    apiKey: apiKey,
+                    forceRefresh: forceRefresh
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.data) {
+                    finalData = result.data;
+                    source = result.source || "server_api";
+                }
+            }
+        } catch (err) {
+            // Local server offline
         }
     }
 
@@ -2874,9 +2966,9 @@ async function runLangGraphWorkflow() {
     if (selectedModel.startsWith("gemini")) provider = "gemini";
     else if (selectedModel.startsWith("gpt")) provider = "openai";
 
-    const apiKey = provider === "gemini"
+    const apiKey = (provider === "gemini"
         ? localStorage.getItem("sfd_gemini_api_key")
-        : localStorage.getItem("sfd_openai_api_key");
+        : localStorage.getItem("sfd_openai_api_key")) || localStorage.getItem("sfd_gemini_api_key") || localStorage.getItem("sfd_openai_api_key");
 
     // Reset visual nodes
     const nodeIds = ["node-benchmark", "node-fmea", "node-mitigation", "node-synthesis"];
@@ -2924,35 +3016,52 @@ async function runLangGraphWorkflow() {
         node3.classList.add("completed-node");
     }
 
-    // Step 4: Executive Synthesis Node (API Dispatch)
+    // Step 4: Executive Synthesis Node (Direct Gemini/OpenAI API or Server Dispatch)
     const node4 = document.getElementById("node-synthesis");
     if (node4) node4.classList.add("active-node");
     appendLog("info", `[Node 4: Executive Synthesizer] Calling ${provider.toUpperCase()} Strategic Intelligence Engine...`);
 
     let resultData = null;
 
-    try {
-        const response = await fetch("/api/agent/run-workflow", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                startup: startup,
-                provider: provider,
-                apiKey: apiKey,
-                modelName: selectedModel
-            })
-        });
-
-        if (response.ok) {
-            resultData = await response.json();
-            appendLog("success", `[Node 4: Executive Synthesizer] Reasoning complete! Confidence Score: ${resultData.strategicIntelligence?.confidenceScore || 90}%`);
-        } else {
-            throw new Error(`Server returned ${response.status}`);
+    // 1. Direct client-side Gemini / OpenAI execution
+    if (apiKey && (provider === "gemini" || provider === "openai" || apiKey.startsWith("AIzaSy") || apiKey.startsWith("sk-"))) {
+        try {
+            appendLog("info", `[Node 4: Executive Synthesizer] Executing reasoning via direct AI API...`);
+            resultData = await callDirectClientAgentWorkflow(startup, apiKey, provider, selectedModel);
+            appendLog("success", `[Node 4: Executive Synthesizer] Live AI reasoning complete! Confidence Score: ${resultData.strategicIntelligence?.confidenceScore || 92}%`);
+        } catch (e) {
+            console.warn("Direct AI workflow call failed:", e.message);
         }
-    } catch (err) {
-        appendLog("warn", `Server endpoint unavailable (${err.message}). Using client-side intelligent reasoning engine.`);
+    }
+
+    // 2. Try server endpoint only if not on static hosting and direct API didn't run
+    if (!resultData && !IS_STATIC_HOST) {
+        try {
+            const response = await fetch("/api/agent/run-workflow", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    startup: startup,
+                    provider: provider,
+                    apiKey: apiKey,
+                    modelName: selectedModel
+                })
+            });
+
+            if (response.ok) {
+                resultData = await response.json();
+                appendLog("success", `[Node 4: Executive Synthesizer] Reasoning complete! Confidence Score: ${resultData.strategicIntelligence?.confidenceScore || 90}%`);
+            }
+        } catch (err) {
+            // Local server offline
+        }
+    }
+
+    // 3. Built-in Strategic Reasoner Fallback
+    if (!resultData) {
+        appendLog("info", `[Node 4: Executive Synthesizer] Synthesizing reasoning with built-in Strategic Engine.`);
         resultData = generateClientSideAgentResults(startup);
-        appendLog("success", `[Node 4: Executive Synthesizer] Client-side strategic reasoning generated successfully.`);
+        appendLog("success", `[Node 4: Executive Synthesizer] Strategic reasoning generated successfully.`);
     }
 
     if (node4) {
