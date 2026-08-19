@@ -323,97 +323,412 @@ transform:translateY(-8px);
    SWOT GRID
 ========================================== */
 
-.swot-grid {
+/* ==========================================
+   EXECUTIVE SWOT MATRIX & FEASIBILITY STYLING
+========================================== */
 
-    display: grid;
+/* ==========================================
+   STREAMLINED EXECUTIVE ASSESSMENT DASHBOARD
+========================================== */
 
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 15px;
-
-    margin-top: 15px;
-
+.assessment-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
-
-.swot-card {
-
-    padding: 18px;
-
-    border-radius: 12px;
-
-    background: #f8fafc;
-
-    border: 1px solid #eef1f6;
-
+.report-top-header {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-
-.swot-card h4 {
-
-    margin-top: 0;
-
-    margin-bottom: 10px;
-
-    font-size: 15px;
-
+.report-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
 }
 
-
-.swot-card ul {
-
+.report-header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin: 0;
-
-    padding-left: 20px;
-
 }
 
-
-.swot-card li {
-
-    margin-bottom: 7px;
-
-    font-size: 13px;
-
-    line-height: 1.5;
-
+.startup-info-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-
-/* SWOT headings */
-
-.swot-card.strengths h4 {
-    color: #16a34a;
+.info-chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
 }
 
-
-.swot-card.weaknesses h4 {
-    color: #ea580c;
+.info-chip.primary {
+    background: #eef2ff;
+    color: #4338ca;
+    border-color: #c7d2fe;
 }
 
-
-.swot-card.opportunities h4 {
-    color: #2563eb;
+.report-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-
-.swot-card.threats h4 {
-    color: #dc2626;
+.risk-score-pill {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
+.risk-score-pill.high { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.risk-score-pill.medium { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+.risk-score-pill.low { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
 
-/* Mobile */
+.btn-ai-deep {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+}
+
+.btn-ai-deep:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.btn-agent-nav {
+    background: #0f172a;
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-agent-nav:hover {
+    background: #1e293b;
+}
+
+/* 3-Column Panoramic Dashboard Grid */
+.assessment-tri-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1.45fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.report-col-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+}
+
+.report-col-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Column 1: Risk Breakdown & Diagnostics */
+.risk-meter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 14px;
+}
+
+.risk-meter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.risk-meter-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.risk-meter-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.risk-meter-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+
+.fill-risk-high { background: #ef4444; }
+.fill-risk-med { background: #f59e0b; }
+.fill-risk-low { background: #10b981; }
+
+.findings-box-compact {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid #edf2f7;
+    flex-grow: 1;
+}
+
+.findings-box-compact h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin: 0 0 6px 0;
+}
+
+.findings-box-compact ul {
+    margin: 0;
+    padding-left: 14px;
+    font-size: 11.5px;
+    color: #334155;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Column 2: Feasibility Assessment */
+.feasibility-col-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+.feasibility-score-banner {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.feasibility-score-banner h4 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #15803d;
+}
+
+.feasibility-score-banner .status-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.feasibility-verdict-compact {
+    background: #f8fafc;
+    border-left: 3px solid #4f46e5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #334155;
+}
+
+.feasibility-dim-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.dim-compact-item {
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+    padding: 7px 10px;
+}
+
+.dim-compact-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 3px;
+}
+
+.dim-compact-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+
+.dim-compact-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+
+.dim-compact-insight {
+    font-size: 10.5px;
+    color: #64748b;
+    line-height: 1.35;
+    margin: 0;
+}
+
+/* Column 3: 2x2 SWOT Grid */
+.swot-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.swot-compact-card {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.swot-compact-card.strengths {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    border-left: 4px solid #10b981;
+}
+
+.swot-compact-card.weaknesses {
+    background: #fffbeb;
+    border-color: #fde68a;
+    border-left: 4px solid #f59e0b;
+}
+
+.swot-compact-card.opportunities {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    border-left: 4px solid #3b82f6;
+}
+
+.swot-compact-card.threats {
+    background: #fef2f2;
+    border-color: #fecaca;
+    border-left: 4px solid #ef4444;
+}
+
+.swot-compact-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+.swot-compact-card.strengths .swot-compact-header { color: #047857; }
+.swot-compact-card.weaknesses .swot-compact-header { color: #b45309; }
+.swot-compact-card.opportunities .swot-compact-header { color: #1d4ed8; }
+.swot-compact-card.threats .swot-compact-header { color: #b91c1c; }
+
+.swot-compact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.swot-mini-box {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.swot-mini-box strong {
+    font-size: 11px;
+    color: #0f172a;
+    display: block;
+    line-height: 1.25;
+}
+
+.swot-mini-box p {
+    font-size: 10px;
+    color: #475569;
+    margin: 2px 0 0 0;
+    line-height: 1.35;
+}
+
+@media (max-width: 1200px) {
+    .assessment-tri-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 @media (max-width: 768px) {
-
     .swot-grid {
-
         grid-template-columns: 1fr;
-
     }
-
 }
+
 
 /* ========================================== */
 /* MILESTONE 3: STRATEGIC AI AGENTS & ROADMAP */

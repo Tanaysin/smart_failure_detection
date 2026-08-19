@@ -4,13 +4,20 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
-const { LangGraphAgentWorkflow, simulateWhatIfScenario, generateAndSaveIndustryData } = require("./agent_engine");
+const { 
+    LangGraphAgentWorkflow, 
+    simulateWhatIfScenario, 
+    generateAndSaveIndustryData,
+    generateFeasibilityAndSWOT,
+    loadIndustryDataset
+} = require("./agent_engine");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+
 
 
 // ===============================
@@ -240,6 +247,42 @@ app.post("/api/scenario/simulate", (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 });
+
+// 5. Generate Project Feasibility & SWOT Analysis with Gemini / OpenAI
+app.post("/api/analysis/feasibility-swot", async (req, res) => {
+    try {
+        const { startup, provider, apiKey, modelName } = req.body;
+        if (!startup) {
+            return res.status(400).json({ success: false, message: "Startup profile is required" });
+        }
+
+        const currentDataset = loadIndustryDataset();
+        const indKey = Object.keys(currentDataset).find(
+            k => k.toLowerCase() === (startup.industry || "").toLowerCase()
+        );
+        const benchmarkData = indKey ? currentDataset[indKey] : {};
+
+        const selectedProvider = provider || (process.env.GEMINI_API_KEY ? "gemini" : (process.env.OPENAI_API_KEY ? "openai" : "heuristic"));
+        const activeApiKey = apiKey || (selectedProvider === "gemini" ? process.env.GEMINI_API_KEY : process.env.OPENAI_API_KEY);
+
+        const result = await generateFeasibilityAndSWOT(startup, benchmarkData, {
+            provider: selectedProvider,
+            apiKey: activeApiKey,
+            modelName
+        });
+
+        res.json({
+            success: true,
+            feasibility: result.feasibility,
+            swot: result.swot,
+            source: result.source
+        });
+    } catch (err) {
+        console.error("Feasibility/SWOT API Error:", err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 
 
 // ===============================

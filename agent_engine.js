@@ -143,6 +143,245 @@ Return JSON with keys: executiveThesis (string), strategicPillars (array of {tit
 }
 
 /**
+ * Intelligent Fallback for SWOT & Feasibility Generation
+ */
+function synthesizeContextualSWOTAndFeasibility(startup, benchmarkData = {}) {
+    const name = startup.projectName || startup.project_name || "Venture";
+    const ind = startup.industry || "Technology";
+    const model = startup.business_model || startup.businessModel || "SaaS";
+    const budget = Number(startup.budget) || 500000;
+    const targetMarket = startup.target_market || startup.targetMarket || "Enterprise & SMBs";
+    const desc = startup.description || "";
+
+    const topCompetitor = (benchmarkData.competitors && benchmarkData.competitors[0]) 
+        ? benchmarkData.competitors[0].name 
+        : "Market Incumbents";
+
+    // Dynamic Feasibility calculations
+    const finScore = budget >= 1000000 ? 88 : budget >= 500000 ? 76 : budget >= 200000 ? 64 : 45;
+    const mktScore = benchmarkData.failureRate && benchmarkData.failureRate < 40 ? 84 : 72;
+    const bizScore = model === "SaaS" ? 86 : model === "B2B" ? 80 : 70;
+    const indScore = Math.max(40, 100 - (benchmarkData.failureRate || 45));
+    const exeScore = desc.length > 80 ? 82 : 68;
+
+    const overallScore = Math.round(finScore * 0.25 + mktScore * 0.25 + bizScore * 0.20 + indScore * 0.15 + exeScore * 0.15);
+    const status = overallScore >= 80 ? "High Commercial Viability" : overallScore >= 65 ? "Moderately Feasible (Viable)" : "Conditional Feasibility";
+
+    return {
+        feasibility: {
+            overall: overallScore,
+            status: status,
+            verdict: `${name} displays strong product-market positioning in ${ind} with an estimated commercial viability score of ${overallScore}%. While financial runway demands disciplined burn management, the scalable ${model} structure provides high operational leverage.`,
+            dimensions: {
+                financial: {
+                    score: finScore,
+                    insight: `Budget of ₹${budget.toLocaleString()} provides ~12-14 months operational buffer with structured milestone execution.`
+                },
+                market: {
+                    score: mktScore,
+                    insight: `Addressable market demand in ${ind} shows positive CAGR with strong early-adopter appetite.`
+                },
+                businessModel: {
+                    score: bizScore,
+                    insight: `${model} architecture delivers compounding gross margins and predictable customer lifetime value (LTV).`
+                },
+                industry: {
+                    score: indScore,
+                    insight: `Sector benchmark failure rate is ~${benchmarkData.failureRate || 40}%, representing manageable macro resistance.`
+                },
+                execution: {
+                    score: exeScore,
+                    insight: `Operational roadmap demonstrates clear domain alignment for targeting ${targetMarket}.`
+                }
+            }
+        },
+        swot: {
+            strengths: [
+                {
+                    title: "Scalable Monetization Architecture",
+                    desc: `The ${model} model offers high margin retention and recurring revenue expansion potential.`
+                },
+                {
+                    title: "Focused Target Market Wedge",
+                    desc: `Tailored value proposition addressing specific friction points for ${targetMarket}.`
+                },
+                {
+                    title: "Capital Efficiency Foundation",
+                    desc: `Lean initial operational framework minimizing fixed overhead prior to product-market fit validation.`
+                }
+            ],
+            weaknesses: [
+                {
+                    title: "Runway & Working Capital Dependency",
+                    desc: `Initial capital allocation of ₹${budget.toLocaleString()} requires early revenue traction or milestone-based financing.`
+                },
+                {
+                    title: "Early Brand & Distribution Friction",
+                    desc: "Nascent market awareness compared to well-funded legacy market players."
+                },
+                {
+                    title: "Customer Onboarding & Sales Velocity",
+                    desc: "Potential sales procurement cycles could create initial cash receipt lag."
+                }
+            ],
+            opportunities: [
+                {
+                    title: "Verticalized Niche Capture",
+                    desc: `Underserved sub-segments overlooked by ${topCompetitor} present immediate high-conversion market share.`
+                },
+                {
+                    title: "Product-Led Growth & Inbound Flywheel",
+                    desc: "Deploying self-serve trials and automated workflows to reduce customer acquisition costs (CAC)."
+                },
+                {
+                    title: "Strategic Ecosystem Integrations",
+                    desc: "Partnering with complementary platforms in the space to unlock non-linear distribution channels."
+                }
+            ],
+            threats: [
+                {
+                    title: "Incumbent Feature Encroachment",
+                    desc: `Established market leaders like ${topCompetitor} leveraging larger sales forces and bundling capabilities.`
+                },
+                {
+                    title: "Customer Churn & Switching Dynamics",
+                    desc: "Aggressive competitor discount campaigns in price-sensitive market tiers."
+                },
+                {
+                    title: "Regulatory & Compliance Evolutions",
+                    desc: `Emerging industry regulations requiring continuous product adaptation and compliance overhead.`
+                }
+            ]
+        }
+    };
+}
+
+/**
+ * Generate Gemini/OpenAI Project Feasibility & SWOT Analysis
+ */
+async function generateFeasibilityAndSWOT(startup, benchmarkData = {}, options = {}) {
+    const provider = options.provider || (process.env.GEMINI_API_KEY ? "gemini" : (process.env.OPENAI_API_KEY ? "openai" : "heuristic"));
+    const apiKey = options.apiKey || (provider === "gemini" ? process.env.GEMINI_API_KEY : process.env.OPENAI_API_KEY);
+    const modelName = options.modelName;
+
+    if (provider === "gemini" && apiKey) {
+        try {
+            console.log("Generating Feasibility & SWOT via Gemini...");
+            const genAI = new GoogleGenerativeAI(apiKey);
+            const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-flash" });
+
+            const prompt = `
+You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
+Perform a rigorous, professional Feasibility Assessment and comprehensive 2x2 SWOT Matrix for the following startup:
+
+STARTUP PROFILE:
+- Name: ${startup.projectName || startup.project_name || "Startup"}
+- Industry: ${startup.industry}
+- Business Model: ${startup.business_model || startup.businessModel}
+- Budget (INR): ₹${startup.budget}
+- Target Market: ${startup.target_market || startup.targetMarket || "General"}
+- Description: ${startup.description || "N/A"}
+
+INDUSTRY BENCHMARKS:
+- Historical Sector Failure Rate: ${benchmarkData.failureRate || 42}%
+- Key Competitors: ${JSON.stringify(benchmarkData.competitors || [])}
+- Growth Trajectory: ${JSON.stringify(benchmarkData.marketGrowth || [])}
+
+REQUIREMENTS:
+Respond ONLY with a valid, raw JSON object (NO markdown code blocks, no backticks, no other text) with this EXACT structure:
+{
+  "feasibility": {
+    "overall": number (0-100),
+    "status": "e.g. High Commercial Viability / Moderately Feasible / Conditional",
+    "verdict": "2-3 sentences concise executive feasibility synthesis.",
+    "dimensions": {
+      "financial": { "score": number (0-100), "insight": "Concise analytical note on runway & capital adequacy." },
+      "market": { "score": number (0-100), "insight": "Concise note on addressable demand and sector momentum." },
+      "businessModel": { "score": number (0-100), "insight": "Concise note on monetization scalability & unit margins." },
+      "industry": { "score": number (0-100), "insight": "Concise note on competitive barriers and failure rate resistance." },
+      "execution": { "score": number (0-100), "insight": "Concise note on operational go-to-market readiness." }
+    }
+  },
+  "swot": {
+    "strengths": [
+      { "title": "Headline (3-5 words)", "desc": "1-2 sentence detailed analytical justification." },
+      { "title": "Headline", "desc": "..." },
+      { "title": "Headline", "desc": "..." }
+    ],
+    "weaknesses": [
+      { "title": "Headline (3-5 words)", "desc": "1-2 sentence detailed analytical justification." },
+      { "title": "Headline", "desc": "..." },
+      { "title": "Headline", "desc": "..." }
+    ],
+    "opportunities": [
+      { "title": "Headline (3-5 words)", "desc": "1-2 sentence detailed analytical justification." },
+      { "title": "Headline", "desc": "..." },
+      { "title": "Headline", "desc": "..." }
+    ],
+    "threats": [
+      { "title": "Headline (3-5 words)", "desc": "1-2 sentence detailed analytical justification." },
+      { "title": "Headline", "desc": "..." },
+      { "title": "Headline", "desc": "..." }
+    ]
+  }
+}
+`;
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
+            const parsed = JSON.parse(cleanJson);
+            parsed.source = `${provider}_live_api`;
+            return parsed;
+        } catch (err) {
+            console.warn("Gemini Feasibility/SWOT generation error, falling back to heuristic:", err.message);
+            const fallback = synthesizeContextualSWOTAndFeasibility(startup, benchmarkData);
+            fallback.source = "fallback_engine";
+            return fallback;
+        }
+    } else if (provider === "openai" && apiKey) {
+        try {
+            console.log("Generating Feasibility & SWOT via OpenAI...");
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: modelName || "gpt-4o-mini",
+                    messages: [
+                        {
+                            role: "system",
+                            content: "You are an elite VC venture risk auditor. Respond strictly with raw JSON."
+                        },
+                        {
+                            role: "user",
+                            content: `Analyze startup ${startup.projectName || startup.project_name} in ${startup.industry}. Return JSON with 'feasibility' (overall, status, verdict, dimensions for financial, market, businessModel, industry, execution) and 'swot' (strengths, weaknesses, opportunities, threats array of {title, desc}).`
+                        }
+                    ],
+                    response_format: { type: "json_object" },
+                    temperature: 0.7
+                })
+            });
+            const data = await response.json();
+            const parsed = JSON.parse(data.choices[0].message.content);
+            parsed.source = "openai_live_api";
+            return parsed;
+        } catch (err) {
+            console.warn("OpenAI Feasibility/SWOT error, using fallback:", err.message);
+            const fallback = synthesizeContextualSWOTAndFeasibility(startup, benchmarkData);
+            fallback.source = "fallback_engine";
+            return fallback;
+        }
+    }
+
+    const result = synthesizeContextualSWOTAndFeasibility(startup, benchmarkData);
+    result.source = "intelligent_synthesizer";
+    return result;
+}
+
+
+/**
  * Save dataset back to Industry_data.json
  */
 function saveIndustryDataset(dataset) {
@@ -769,6 +1008,9 @@ module.exports = {
     LangGraphAgentWorkflow,
     simulateWhatIfScenario,
     generateAndSaveIndustryData,
+    generateFeasibilityAndSWOT,
+    synthesizeContextualSWOTAndFeasibility,
     loadIndustryDataset
 };
+
 
