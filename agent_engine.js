@@ -398,12 +398,90 @@ function saveIndustryDataset(dataset) {
 /**
  * Intelligent Fallback Market Data Generator for any industry
  */
+const INDIAN_INDUSTRY_CATALOG = {
+    healthcare: [
+        { name: "Practo", marketShare: 34, revenue: 380, funding: 1850 },
+        { name: "PharmEasy", marketShare: 28, revenue: 5700, funding: 9500 },
+        { name: "Tata 1mg", marketShare: 22, revenue: 1650, funding: 2400 },
+        { name: "Apollo 24|7", marketShare: 16, revenue: 950, funding: 1200 }
+    ],
+    ai: [
+        { name: "Sarvam AI", marketShare: 35, revenue: 45, funding: 420 },
+        { name: "Krutrim", marketShare: 28, revenue: 30, funding: 415 },
+        { name: "Yellow.ai", marketShare: 22, revenue: 280, funding: 850 },
+        { name: "CoRover.ai / Hanooman", marketShare: 15, revenue: 25, funding: 110 }
+    ],
+    fintech: [
+        { name: "PhonePe", marketShare: 38, revenue: 2914, funding: 8200 },
+        { name: "Paytm", marketShare: 26, revenue: 7990, funding: 18000 },
+        { name: "Razorpay", marketShare: 22, revenue: 2279, funding: 6500 },
+        { name: "CRED", marketShare: 14, revenue: 1400, funding: 6600 }
+    ],
+    edtech: [
+        { name: "PhysicsWallah", marketShare: 38, revenue: 1600, funding: 1800 },
+        { name: "Unacademy", marketShare: 26, revenue: 980, funding: 7200 },
+        { name: "Eruditus", marketShare: 20, revenue: 3300, funding: 6800 },
+        { name: "Vedantu", marketShare: 16, revenue: 150, funding: 2700 }
+    ],
+    travel: [
+        { name: "MakeMyTrip", marketShare: 46, revenue: 4900, funding: 4500 },
+        { name: "EaseMyTrip", marketShare: 24, revenue: 590, funding: 350 },
+        { name: "Ixigo", marketShare: 18, revenue: 501, funding: 600 },
+        { name: "Cleartrip", marketShare: 12, revenue: 320, funding: 1100 }
+    ],
+    agritech: [
+        { name: "DeHaat", marketShare: 36, revenue: 2700, funding: 1850 },
+        { name: "Ninjacart", marketShare: 28, revenue: 1200, funding: 3100 },
+        { name: "AgroStar", marketShare: 22, revenue: 500, funding: 920 },
+        { name: "CropIn", marketShare: 14, revenue: 80, funding: 270 }
+    ],
+    "e commerce": [
+        { name: "Flipkart", marketShare: 38, revenue: 56000, funding: 105000 },
+        { name: "Meesho", marketShare: 27, revenue: 5735, funding: 8900 },
+        { name: "Blinkit", marketShare: 21, revenue: 2300, funding: 6200 },
+        { name: "Zepto", marketShare: 14, revenue: 2024, funding: 11000 }
+    ],
+    gaming: [
+        { name: "Dream11", marketShare: 44, revenue: 6384, funding: 5900 },
+        { name: "Games24x7", marketShare: 24, revenue: 1988, funding: 1200 },
+        { name: "Nazara Technologies", marketShare: 18, revenue: 1091, funding: 1500 },
+        { name: "Mobile Premier League (MPL)", marketShare: 14, revenue: 814, funding: 3100 }
+    ],
+    automotive: [
+        { name: "Tata Motors EV", marketShare: 42, revenue: 14500, funding: 7500 },
+        { name: "Ola Electric", marketShare: 28, revenue: 5009, funding: 8200 },
+        { name: "Ather Energy", marketShare: 18, revenue: 1789, funding: 3700 },
+        { name: "Bounce Infinity", marketShare: 12, revenue: 120, funding: 1800 }
+    ],
+    saas: [
+        { name: "Zoho", marketShare: 42, revenue: 8700, funding: 0 },
+        { name: "Freshworks", marketShare: 30, revenue: 4900, funding: 3200 },
+        { name: "Postman", marketShare: 16, revenue: 600, funding: 3500 },
+        { name: "BrowserStack", marketShare: 12, revenue: 900, funding: 1600 }
+    ],
+    logistics: [
+        { name: "Delhivery", marketShare: 40, revenue: 7200, funding: 11000 },
+        { name: "Shadowfax", marketShare: 26, revenue: 1400, funding: 1800 },
+        { name: "BlackBuck", marketShare: 18, revenue: 750, funding: 2900 },
+        { name: "Porter", marketShare: 16, revenue: 880, funding: 1200 }
+    ],
+    foodtech: [
+        { name: "Zomato", marketShare: 52, revenue: 12114, funding: 17500 },
+        { name: "Swiggy", marketShare: 40, revenue: 11247, funding: 24000 },
+        { name: "Rebel Foods", marketShare: 5, revenue: 1198, funding: 4200 },
+        { name: "Curefoods", marketShare: 3, revenue: 380, funding: 1200 }
+    ]
+};
+
+/**
+ * Intelligent Market Data Synthesizer for Indian Startup Ecosystem
+ */
 function synthesizeRealisticIndustryData(industryName) {
     const ind = (industryName || "technology").toLowerCase().trim();
     const hash = ind.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
 
-    const baseGrowth = 10 + (hash % 15);
-    const growthStep = 3 + (hash % 6);
+    const baseGrowth = 12 + (hash % 14);
+    const growthStep = 4 + (hash % 6);
     const marketGrowth = [
         baseGrowth,
         baseGrowth + growthStep,
@@ -413,53 +491,56 @@ function synthesizeRealisticIndustryData(industryName) {
         baseGrowth + growthStep * 5 + 9
     ];
 
-    const baseFunding = 8 + (hash % 12);
-    const fundingStep = 4 + (hash % 8);
+    const baseFunding = 10 + (hash % 15);
+    const fundingStep = 5 + (hash % 8);
     const funding = [
         baseFunding,
         baseFunding + fundingStep,
-        baseFunding + fundingStep * 2 + 1,
-        baseFunding + fundingStep * 3 + 3,
-        baseFunding + fundingStep * 4 + 6,
-        baseFunding + fundingStep * 5 + 10
+        baseFunding + fundingStep * 2 + 2,
+        baseFunding + fundingStep * 3 + 4,
+        baseFunding + fundingStep * 4 + 7,
+        baseFunding + fundingStep * 5 + 11
     ];
 
-    const failureRate = 30 + (hash % 35);
+    const failureRate = 32 + (hash % 30);
 
-    const dist1 = 30 + (hash % 10);
-    const dist2 = 25 - (hash % 5);
+    const dist1 = 32 + (hash % 8);
+    const dist2 = 24 - (hash % 4);
     const dist3 = 20;
     const dist4 = 15;
     const dist5 = 100 - (dist1 + dist2 + dist3 + dist4);
 
-    // Contextual realistic competitors
-    const cleanName = ind.charAt(0).toUpperCase() + ind.slice(1);
-    const competitors = [
-        {
-            name: `${cleanName}Prime`,
-            marketShare: 34,
-            revenue: 250 + (hash % 300),
-            funding: 500 + (hash % 600)
-        },
-        {
-            name: `Nexus${cleanName}`,
-            marketShare: 24,
-            revenue: 160 + (hash % 200),
-            funding: 320 + (hash % 400)
-        },
-        {
-            name: `Apex${cleanName}`,
-            marketShare: 18,
-            revenue: 110 + (hash % 150),
-            funding: 220 + (hash % 300)
-        },
-        {
-            name: `Vanguard ${cleanName}`,
-            marketShare: 12,
-            revenue: 70 + (hash % 100),
-            funding: 140 + (hash % 200)
-        }
-    ];
+    // Look up in Indian Industry Catalog or synthesize contextual Indian company names
+    let competitors = INDIAN_INDUSTRY_CATALOG[ind];
+    if (!competitors) {
+        const cleanName = ind.charAt(0).toUpperCase() + ind.slice(1);
+        competitors = [
+            {
+                name: `${cleanName}Bharat / ${cleanName}Pay`,
+                marketShare: 36,
+                revenue: 350 + (hash % 500),
+                funding: 800 + (hash % 1200)
+            },
+            {
+                name: `Nxt${cleanName} India`,
+                marketShare: 26,
+                revenue: 220 + (hash % 300),
+                funding: 450 + (hash % 700)
+            },
+            {
+                name: `Indi${cleanName} Labs`,
+                marketShare: 20,
+                revenue: 140 + (hash % 200),
+                funding: 280 + (hash % 400)
+            },
+            {
+                name: `${cleanName}Kart Ventures`,
+                marketShare: 18,
+                revenue: 90 + (hash % 150),
+                funding: 160 + (hash % 300)
+            }
+        ];
+    }
 
     return {
         marketGrowth,
@@ -500,13 +581,13 @@ async function generateAndSaveIndustryData(industryName, options = {}) {
 
     if (provider === "gemini" && apiKey) {
         try {
-            console.log(`Generating live market data for "${industryName}" via Gemini...`);
+            console.log(`Generating live Indian market data for "${industryName}" via Gemini...`);
             const genAI = new GoogleGenerativeAI(apiKey);
             const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-flash" });
 
             const prompt = `
-You are an expert venture capital market intelligence analyst.
-Provide realistic, current, comprehensive market data for the industry sector: "${rawKey}".
+You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
+Provide realistic, current, comprehensive Indian market data for the industry sector: "${rawKey}".
 
 Return STRICTLY a valid, raw JSON object (no markdown, no backticks, no explanatory text) with this EXACT structure:
 {
@@ -515,19 +596,19 @@ Return STRICTLY a valid, raw JSON object (no markdown, no backticks, no explanat
   "failureRate": number,
   "investmentDistribution": [number, number, number, number, number],
   "competitors": [
-    { "name": "Top Real Competitor 1", "marketShare": number, "revenue": number, "funding": number },
-    { "name": "Competitor 2", "marketShare": number, "revenue": number, "funding": number },
-    { "name": "Competitor 3", "marketShare": number, "revenue": number, "funding": number },
-    { "name": "Competitor 4", "marketShare": number, "revenue": number, "funding": number }
+    { "name": "Top Real Indian Startup/Company 1", "marketShare": number, "revenue": number, "funding": number },
+    { "name": "Real Indian Startup/Company 2", "marketShare": number, "revenue": number, "funding": number },
+    { "name": "Real Indian Startup/Company 3", "marketShare": number, "revenue": number, "funding": number },
+    { "name": "Real Indian Startup/Company 4", "marketShare": number, "revenue": number, "funding": number }
   ]
 }
 
 Ensure:
-- marketGrowth has 6 numbers representing annual market growth index/percent from 2020 to 2025.
-- funding has 6 numbers representing annual venture funding volume in $B/₹B from 2020 to 2025.
-- failureRate is a realistic percentage (e.g. between 25 and 70).
-- investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Series A, Series B, Growth, Late-Stage).
-- competitors contains 4 actual real-world market leading companies with realistic marketShare %, revenue ($M or ₹Cr), and funding ($M or ₹Cr).
+- marketGrowth has 6 numbers representing annual market growth index/percent in India from 2020 to 2025.
+- funding has 6 numbers representing annual venture funding volume in India in ₹ Crore (or ₹ Billion) from 2020 to 2025.
+- failureRate is a realistic percentage for Indian startups in this sector (e.g. between 25 and 65).
+- investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Angel, Series A, Series B, Growth/Late-Stage).
+- competitors contains 4 actual real-world INDIAN companies/startups operating in India (e.g., from the Indian ecosystem) with realistic marketShare %, annual revenue in ₹ Crore, and total funding in ₹ Crore.
 `;
             const result = await model.generateContent(prompt);
             const text = result.response.text();
@@ -539,7 +620,7 @@ Ensure:
         }
     } else if (provider === "openai" && apiKey) {
         try {
-            console.log(`Generating live market data for "${industryName}" via OpenAI...`);
+            console.log(`Generating live Indian market data for "${industryName}" via OpenAI...`);
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -551,11 +632,11 @@ Ensure:
                     messages: [
                         {
                             role: "system",
-                            content: "You are a venture capital market economist. Respond strictly with raw JSON."
+                            content: "You are a venture capital market economist specializing in the Indian startup and business ecosystem. Respond strictly with raw JSON."
                         },
                         {
                             role: "user",
-                            content: `Generate realistic market data for industry: "${rawKey}". Return JSON with keys: marketGrowth (array of 6 numbers for 2020-2025), funding (array of 6 numbers for 2020-2025), failureRate (number %), investmentDistribution (array of 5 stage percentages summing to 100), competitors (array of 4 objects with name, marketShare, revenue, funding).`
+                            content: `Generate realistic Indian market data for industry: "${rawKey}". Return JSON with keys: marketGrowth (array of 6 numbers for 2020-2025), funding (array of 6 numbers in ₹ Crore for 2020-2025), failureRate (number %), investmentDistribution (array of 5 stage percentages summing to 100), competitors (array of 4 actual real-world INDIAN companies with name, marketShare %, revenue in ₹ Crore, funding in ₹ Crore).`
                         }
                     ],
                     response_format: { type: "json_object" },
@@ -569,7 +650,7 @@ Ensure:
             marketData = synthesizeRealisticIndustryData(rawKey);
         }
     } else {
-        console.log(`Generating market data for "${industryName}" via intelligent synthesizer...`);
+        console.log(`Generating Indian market data for "${industryName}" via intelligent synthesizer...`);
         marketData = synthesizeRealisticIndustryData(rawKey);
     }
 
