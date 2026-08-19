@@ -362,5 +362,57 @@
                 "funding": 316
             }
         ]
+    },
+    "gaming": {
+        "marketGrowth": [
+            22,
+            28,
+            34,
+            42,
+            51,
+            61
+        ],
+        "funding": [
+            11,
+            18,
+            26,
+            35,
+            45,
+            56
+        ],
+        "failureRate": 62,
+        "investmentDistribution": [
+            37,
+            23,
+            20,
+            15,
+            5
+        ],
+        "competitors": [
+            {
+                "name": "GamingPrime",
+                "marketShare": 34,
+                "revenue": 277,
+                "funding": 527
+            },
+            {
+                "name": "NexusGaming",
+                "marketShare": 24,
+                "revenue": 187,
+                "funding": 547
+            },
+            {
+                "name": "ApexGaming",
+                "marketShare": 18,
+                "revenue": 137,
+                "funding": 247
+            },
+            {
+                "name": "Vanguard Gaming",
+                "marketShare": 12,
+                "revenue": 97,
+                "funding": 167
+            }
+        ]
     }
 }

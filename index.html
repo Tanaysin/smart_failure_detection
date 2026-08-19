@@ -111,259 +111,126 @@
         <!-- DASHBOARD PAGE -->
         <!-- ================================================= -->
 
+        <!-- ================================================= -->
+        <!-- DASHBOARD PAGE -->
+        <!-- ================================================= -->
+
         <section id="dashboardPage">
 
-            <!-- KPI CARDS -->
+            <!-- MAIN EXECUTIVE DASHBOARD LAYOUT (FORM + PRIMARY CHARTS) -->
+            <div class="dashboard-main-grid">
 
-            <section class="cards">
-
-                <div class="card">
-
-                    <div>
-
-                        <h4>Overall Risk</h4>
-
-                        <h2>72%</h2>
-
-                        <p class="red">
-
-                            High Risk
-
-                        </p>
-
+                <!-- LEFT COLUMN: STARTUP SUBMISSION & ANALYZER FORM -->
+                <div class="form-card-executive">
+                    <div class="form-header-executive">
+                        <h2><i class="fa-solid fa-compass-drafting" style="color:#4f46e5;"></i> Venture Risk Analyzer</h2>
+                        <p>Submit startup metrics for real-time benchmark modeling and risk scoring.</p>
                     </div>
-
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-
-                </div>
-
-                <div class="card">
-
-                    <div>
-
-                        <h4>Success Probability</h4>
-
-                        <h2>28%</h2>
-
-                        <p class="yellow">
-
-                            Moderate
-
-                        </p>
-
-                    </div>
-
-                    <i class="fa-solid fa-chart-line"></i>
-
-                </div>
-
-                <div class="card">
-
-                    <div>
-
-                        <h4>Financial Health</h4>
-
-                        <h2>81%</h2>
-
-                        <p class="green">
-
-                            Stable
-
-                        </p>
-
-                    </div>
-
-                    <i class="fa-solid fa-wallet"></i>
-
-                </div>
-
-                <div class="card">
-
-                    <div>
-
-                        <h4>Market Risk</h4>
-
-                        <h2>63%</h2>
-
-                        <p class="yellow">
-
-                            Medium
-
-                        </p>
-
-                    </div>
-
-                    <i class="fa-solid fa-chart-column"></i>
-
-                </div>
-
-            </section>
-
-            <!-- ================= STARTUP FORM ================= -->
-
-            <section class="startup-form">
-
-                <div class="form-card">
-
-                    <h2>Analyse Startup</h2>
 
                     <form id="submissionForm">
-
-                        <div class="row">
-
-                            <div class="form-group">
-
-                                <label>Startup Name</label>
-
-                                <input
-                                    type="text"
-                                    id="projectName"
-                                    required>
-
-                            </div>
-
-                            <div class="form-group">
-
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                    <label style="margin-bottom:0;">Industry Sector</label>
-                                    <button type="button" id="toggleCustomIndustryBtn" class="link-btn" style="background:none; border:none; color:#4f46e5; font-size:12px; font-weight:600; cursor:pointer;">
-                                        + Custom Industry
-                                    </button>
-                                </div>
-
-                                <div id="standardIndustrySelectWrapper">
-                                    <select id="industry" required>
-                                        <option value="">Select Industry</option>
-                                    </select>
-                                </div>
-
-                                <div id="customIndustryInputWrapper" style="display:none; gap:8px;">
-                                    <input type="text" id="customIndustryInput" placeholder="e.g. Agritech, CleanTech, Gaming...">
-                                    <button type="button" id="aiResearchIndustryBtn" class="ai-ind-quick-btn" title="Generate Live Market Data with Gemini">
-                                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Research
-                                    </button>
-                                </div>
-
-                            </div>
-
+                        <div class="form-group">
+                            <label>Startup Name</label>
+                            <input type="text" id="projectName" placeholder="e.g. Apex HealthAI" required>
                         </div>
 
-                        <div class="row">
+                        <div class="form-group">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <label style="margin-bottom:0;">Industry Sector</label>
+                                <button type="button" id="toggleCustomIndustryBtn" class="link-btn" style="background:none; border:none; color:#4f46e5; font-size:12px; font-weight:600; cursor:pointer;">
+                                    + Custom Industry
+                                </button>
+                            </div>
 
+                            <div id="standardIndustrySelectWrapper">
+                                <select id="industry" required>
+                                    <option value="">Select Industry</option>
+                                </select>
+                            </div>
+
+                            <div id="customIndustryInputWrapper" style="display:none; gap:8px;">
+                                <input type="text" id="customIndustryInput" placeholder="e.g. Agritech, CleanTech, Gaming...">
+                                <button type="button" id="aiResearchIndustryBtn" class="ai-ind-quick-btn" title="Generate Live Market Data with Gemini">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Research
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-row-2">
                             <div class="form-group">
-
                                 <label>Business Model</label>
-
                                 <select id="businessModel">
-
                                     <option>B2B</option>
                                     <option>B2C</option>
                                     <option>SaaS</option>
                                     <option>Other</option>
-
                                 </select>
-
                             </div>
 
                             <div class="form-group">
-
-                                <label>Budget</label>
-
-                                <input
-                                    type="number"
-                                    id="budget">
-
+                                <label>Budget (₹)</label>
+                                <input type="number" id="budget" placeholder="e.g. 500000" required>
                             </div>
-
                         </div>
 
-                        <div class="row">
-
-                            <div class="form-group">
-
-                                <label>Target Market</label>
-
-                                <input
-                                    type="text"
-                                    id="targetMarket">
-
-                            </div>
-
+                        <div class="form-group">
+                            <label>Target Market</label>
+                            <input type="text" id="targetMarket" placeholder="e.g. Enterprise Clinics, SMB Retail">
                         </div>
 
-                        <div class="row">
-
-                            <div class="form-group">
-
-                                <label>Description</label>
-
-                                <textarea
-                                    id="description"
-                                    rows="5"></textarea>
-
-                            </div>
-
+                        <div class="form-group">
+                            <label>Description & Moat</label>
+                            <textarea id="description" rows="3" placeholder="Brief value proposition, product differentiation, or core architecture..."></textarea>
                         </div>
 
-                        <button
-                            type="submit"
-                            class="submitbtn">
-
-                            Analyse Startup
-
+                        <button type="submit" class="submitbtn-executive">
+                            <i class="fa-solid fa-bolt"></i> Analyse Startup Risk &rarr;
                         </button>
-
                     </form>
-
                 </div>
 
-            </section>
+                <!-- RIGHT COLUMN: 2x2 CORE ANALYTICS CHARTS -->
+                <div class="dashboard-charts-2x2">
+                    <div class="dashboard-chart-card">
+                        <h3><i class="fa-solid fa-chart-pie" style="color:#0ea5e9;"></i> Business Model Distribution</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="businessChart"></canvas>
+                        </div>
+                    </div>
 
-            <!-- ================= CHARTS ================= -->
+                    <div class="dashboard-chart-card">
+                        <h3><i class="fa-solid fa-chart-column" style="color:#6366f1;"></i> Industry Distribution</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="industryChart"></canvas>
+                        </div>
+                    </div>
 
-            <section class="chart-grid">
+                    <div class="dashboard-chart-card">
+                        <h3><i class="fa-solid fa-wallet" style="color:#f59e0b;"></i> Budget Analysis by Sector</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
 
-                <div class="chart-card">
-
-                    <h3>Industry Distribution</h3>
-
-                    <canvas id="industryChart"></canvas>
-
+                    <div class="dashboard-chart-card">
+                        <h3><i class="fa-solid fa-radar" style="color:#4f46e5;"></i> AI Risk Profile Radar</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="riskRadar"></canvas>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="chart-card">
+            </div>
 
-                    <h3>Business Model Distribution</h3>
-
-                    <canvas id="businessChart"></canvas>
-
+            <!-- FULL-WIDTH PANORAMIC GROWTH TRAJECTORY CHART -->
+            <div class="chart-card-panoramic">
+                <div class="panoramic-chart-header">
+                    <h3><i class="fa-solid fa-arrow-trend-up" style="color:#10b981;"></i> Multi-Year Startup Growth Trajectory</h3>
+                    <span class="panoramic-tag">Sector Index vs Projected Baseline</span>
                 </div>
-
-                <div class="chart-card">
-
-                    <h3>Budget Analysis</h3>
-
-                    <canvas id="budgetChart"></canvas>
-
-                </div>
-
-                <div class="chart-card">
-
-                    <h3>AI Risk Profile</h3>
-
-                    <canvas id="riskRadar"></canvas>
-
-                </div>
-
-                <div class="chart-card">
-
-                    <h3>Startup Growth Trend</h3>
-
+                <div class="panoramic-canvas-wrapper">
                     <canvas id="growthChart"></canvas>
-
                 </div>
-
-            </section>
+            </div>
 
         </section>
 
