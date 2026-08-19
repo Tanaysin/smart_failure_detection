@@ -1,28 +1,28 @@
 {
     "healthcare": {
         "marketGrowth": [
-            16,
-            22,
-            28,
-            36,
-            45,
-            55
+            17,
+            24,
+            31,
+            40,
+            50,
+            61
         ],
         "funding": [
-            17,
+            16,
             22,
-            28,
-            35,
-            43,
-            52
+            30,
+            38,
+            47,
+            57
         ],
-        "failureRate": 52,
+        "failureRate": 53,
         "investmentDistribution": [
-            31,
-            24,
+            33,
+            23,
             20,
             15,
-            10
+            9
         ],
         "competitors": [
             {
@@ -105,28 +105,28 @@
     },
     "fintech": {
         "marketGrowth": [
-            15,
-            20,
-            25,
-            33,
-            41,
-            50
+            21,
+            30,
+            39,
+            50,
+            62,
+            75
         ],
         "funding": [
-            10,
+            12,
             18,
-            28,
-            35,
-            44,
-            55
+            26,
+            34,
+            43,
+            53
         ],
-        "failureRate": 38,
+        "failureRate": 49,
         "investmentDistribution": [
-            30,
-            25,
-            18,
+            33,
+            23,
+            20,
             15,
-            12
+            9
         ],
         "competitors": [
             {
@@ -365,28 +365,28 @@
     },
     "gaming": {
         "marketGrowth": [
-            22,
-            28,
-            34,
-            42,
-            51,
-            61
+            23,
+            30,
+            37,
+            46,
+            56,
+            67
         ],
         "funding": [
-            11,
-            18,
-            26,
-            35,
-            45,
-            56
+            22,
+            30,
+            40,
+            50,
+            61,
+            73
         ],
-        "failureRate": 49,
+        "failureRate": 59,
         "investmentDistribution": [
-            37,
-            23,
+            35,
+            21,
             20,
             15,
-            5
+            9
         ],
         "competitors": [
             {
@@ -417,22 +417,22 @@
     },
     "automotive": {
         "marketGrowth": [
-            16,
-            22,
+            20,
             28,
-            36,
-            45,
-            55
+            38,
+            49,
+            62,
+            78
         ],
         "funding": [
-            17,
-            26,
-            36,
-            47,
-            59,
-            72
+            18,
+            32,
+            48,
+            65,
+            88,
+            115
         ],
-        "failureRate": 46,
+        "failureRate": 42,
         "investmentDistribution": [
             31,
             24,
@@ -442,28 +442,28 @@
         ],
         "competitors": [
             {
-                "name": "AutomotivePrime",
-                "marketShare": 34,
-                "revenue": 451,
-                "funding": 1001
+                "name": "Tata Motors EV",
+                "marketShare": 42,
+                "revenue": 14500,
+                "funding": 7500
             },
             {
-                "name": "NexusAutomotive",
-                "marketShare": 24,
-                "revenue": 261,
-                "funding": 621
+                "name": "Ola Electric",
+                "marketShare": 28,
+                "revenue": 5009,
+                "funding": 8200
             },
             {
-                "name": "ApexAutomotive",
+                "name": "Ather Energy",
                 "marketShare": 18,
-                "revenue": 161,
-                "funding": 421
+                "revenue": 1789,
+                "funding": 3700
             },
             {
-                "name": "Vanguard Automotive",
+                "name": "Bounce Infinity",
                 "marketShare": 12,
-                "revenue": 71,
-                "funding": 241
+                "revenue": 120,
+                "funding": 1800
             }
         ]
     },
@@ -494,28 +494,28 @@
         ],
         "competitors": [
             {
-                "name": "SaasPrime",
-                "marketShare": 34,
-                "revenue": 374,
-                "funding": 924
+                "name": "Zoho",
+                "marketShare": 42,
+                "revenue": 8700,
+                "funding": 0
             },
             {
-                "name": "NexusSaas",
-                "marketShare": 24,
-                "revenue": 184,
-                "funding": 344
+                "name": "Freshworks",
+                "marketShare": 30,
+                "revenue": 4900,
+                "funding": 3200
             },
             {
-                "name": "ApexSaas",
-                "marketShare": 18,
-                "revenue": 234,
-                "funding": 344
+                "name": "Postman",
+                "marketShare": 16,
+                "revenue": 600,
+                "funding": 3500
             },
             {
-                "name": "Vanguard Saas",
+                "name": "BrowserStack",
                 "marketShare": 12,
-                "revenue": 94,
-                "funding": 164
+                "revenue": 900,
+                "funding": 1600
             }
         ]
     },

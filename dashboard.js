@@ -13,16 +13,16 @@ Chart.defaults.plugins.legend.position = "bottom";
 //  Tailwind/shadcn-style accent colors)
 // ==========================================
 const COLORS = {
-    navy:      "#4F46E5",   // indigo-600 — primary line / dark segment
-    orange:    "#14B8A6",   // teal-500 — secondary line / accent segment
-    coral:     "#818CF8",   // indigo-400 — tertiary segment
-    purple:    "#2DD4BF",   // teal-400 — quaternary segment
-    skyblue:   "#C7D2FE",   // indigo-200 — light segment
-    green:     "#5EEAD4",   // teal-300
-    red:       "#F87171",   // reserved for negative/alert states
-    gridline:  "#F1F5F9",   // cool gray-100 gridlines
-    axisText:  "#94A3B8",   // slate-400 muted labels
-    cardText:  "#1E293B"    // slate-800 near-black text for values/tooltips
+    navy: "#4F46E5",   // indigo-600 — primary line / dark segment
+    orange: "#14B8A6",   // teal-500 — secondary line / accent segment
+    coral: "#818CF8",   // indigo-400 — tertiary segment
+    purple: "#2DD4BF",   // teal-400 — quaternary segment
+    skyblue: "#C7D2FE",   // indigo-200 — light segment
+    green: "#5EEAD4",   // teal-300
+    red: "#F87171",   // reserved for negative/alert states
+    gridline: "#F1F5F9",   // cool gray-100 gridlines
+    axisText: "#94A3B8",   // slate-400 muted labels
+    cardText: "#1E293B"    // slate-800 near-black text for values/tooltips
 };
 
 const PALETTE = [
@@ -192,7 +192,7 @@ async function fetchIndustryData() {
         populateIndustryDropdown();
         console.log("Industry Data Loaded successfully:", Object.keys(industryDataset));
     }
-    catch(err){
+    catch (err) {
         console.error("Industry JSON Error:", err);
     }
 }
@@ -246,11 +246,33 @@ async function loadDashboard() {
 
     try {
 
-        const response =
-            await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
-
-        projects =
-            await response.json();
+        let response;
+        try {
+            response = await fetch("/projects");
+            if (!response.ok) throw new Error("Local fetch failed");
+            projects = await response.json();
+        } catch (e) {
+            try {
+                response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects");
+                if (!response.ok) throw new Error("Render fetch failed");
+                projects = await response.json();
+            } catch (e2) {
+                console.warn("Using fallback local projects dataset");
+                if (!projects || projects.length === 0) {
+                    projects = [
+                        {
+                            id: 1,
+                            project_name: "HealthAI Pulse",
+                            industry: "healthcare",
+                            business_model: "B2B",
+                            target_market: "Hospitals & Clinics",
+                            budget: 5000000,
+                            description: "AI clinical triage and diagnostics support platform."
+                        }
+                    ];
+                }
+            }
+        }
 
         updateKPIs();
 
@@ -266,7 +288,7 @@ async function loadDashboard() {
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.error("Dashboard Error:", err);
 
@@ -425,8 +447,8 @@ function synthesizeContextualSWOTAndFeasibilityClient(project, industryInfo = {}
     const targetMarket = project.target_market || project.targetMarket || "Enterprise & SMBs";
     const desc = project.description || "";
 
-    const topCompetitor = (industryInfo.competitors && industryInfo.competitors[0]) 
-        ? industryInfo.competitors[0].name 
+    const topCompetitor = (industryInfo.competitors && industryInfo.competitors[0])
+        ? industryInfo.competitors[0].name
         : "Industry Leaders";
 
     const failureRate = industryInfo.failureRate || 42;
@@ -1126,19 +1148,19 @@ function createCharts() {
                         legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1221,19 +1243,19 @@ function createCharts() {
                         legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1284,19 +1306,19 @@ function createCharts() {
                         legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1352,7 +1374,7 @@ function createCharts() {
                         tooltip: TOOLTIP_STYLE
                     },
                     scales: {
-                        
+
                         r: {
                             min: 0,
                             max: 100,
@@ -1361,7 +1383,7 @@ function createCharts() {
                             pointLabels: { font: { size: 12 }, color: COLORS.axisText },
                             ticks: { display: false }
                         },
-                        
+
                     }
                 },
                 animation: SMOOTH_ANIMATION
@@ -1669,19 +1691,19 @@ function loadIndustryData(targetIndustry) {
                         legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1729,19 +1751,19 @@ function loadIndustryData(targetIndustry) {
                         legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1917,19 +1939,19 @@ function loadIndustryData(targetIndustry) {
                         legend: { display: true },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -1977,19 +1999,19 @@ function loadIndustryData(targetIndustry) {
                         legend: { display: true },
                         tooltip: TOOLTIP_STYLE
                     },
-                    scales:{
-                        x:{
-                            grid:{
-                                display:false
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
                             }
                         },
-                        y:{
-                            grid:{
+                        y: {
+                            grid: {
                                 display: false,
-                                color:"#fdfeff"
+                                color: "#fdfeff"
                             },
-                            border:{
-                                display:false
+                            border: {
+                                display: false
                             }
                         }
                     }
@@ -2064,7 +2086,7 @@ function loadIndustryData(targetIndustry) {
                         r: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: COLORS.gridline, display:false },
+                            grid: { color: COLORS.gridline, display: false },
                             angleLines: { color: COLORS.gridline },
                             border: { display: false },
                             pointLabels: {
@@ -2428,10 +2450,10 @@ function initMilestone3AgentSuite() {
         marketGenBtn.addEventListener("click", async () => {
             const customVal = marketCustomInput ? marketCustomInput.value.trim() : "";
             const targetInd = customVal || (marketSelect ? marketSelect.value : "technology");
-            
+
             marketGenBtn.disabled = true;
             marketGenBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing with Gemini...';
-            
+
             try {
                 await generateLiveIndustryData(targetInd, true);
             } finally {
@@ -2447,7 +2469,7 @@ function initMilestone3AgentSuite() {
             const targetInd = competitorSelect ? competitorSelect.value : "technology";
             competitorRefreshBtn.disabled = true;
             competitorRefreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...';
-            
+
             try {
                 await generateLiveIndustryData(targetInd, true);
             } finally {
@@ -2587,11 +2609,13 @@ function synthesizeClientIndustryData(industryName) {
 }
 
 async function callDirectClientGemini(industryName, apiKey) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"];
+    let lastErr = null;
+
     const prompt = `You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
 Provide realistic, current, comprehensive Indian market data for the industry sector: "${industryName}".
 
-Return STRICTLY a valid, raw JSON object (no markdown, no backticks, no explanatory text) with this EXACT structure:
+Return STRICTLY a valid JSON object with this EXACT structure:
 {
   "marketGrowth": [number, number, number, number, number, number],
   "funding": [number, number, number, number, number, number],
@@ -2612,19 +2636,36 @@ Ensure:
 - investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Angel, Series A, Series B, Growth/Late-Stage).
 - competitors contains 4 actual real-world INDIAN companies/startups operating in India with realistic marketShare %, annual revenue in ₹ Crore, and total funding in ₹ Crore.`;
 
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-        })
-    });
-    if (!response.ok) throw new Error(`Gemini API HTTP ${response.status}`);
-    const data = await response.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawText) throw new Error("Empty Gemini response");
-    const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
-    return JSON.parse(cleanJson);
+    for (const model of modelsToTry) {
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json"
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error?.message || `HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!rawText) throw new Error("Empty Gemini response");
+            const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+            return JSON.parse(cleanJson);
+        } catch (err) {
+            lastErr = err;
+            console.warn(`Gemini direct call with ${model} failed, trying next:`, err.message);
+        }
+    }
+    throw lastErr;
 }
 
 async function callDirectClientOpenAI(industryName, apiKey) {
@@ -2663,10 +2704,10 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
     const cleanName = industryName.trim();
     const indKey = cleanName.toLowerCase();
 
-    const provider = localStorage.getItem("sfd_ai_provider") || "heuristic";
-    const apiKey = provider === "gemini" 
-        ? localStorage.getItem("sfd_gemini_api_key") 
-        : localStorage.getItem("sfd_openai_api_key");
+    const provider = localStorage.getItem("sfd_ai_provider") || "gemini";
+    const apiKey = (provider === "gemini"
+        ? localStorage.getItem("sfd_gemini_api_key")
+        : localStorage.getItem("sfd_openai_api_key")) || localStorage.getItem("sfd_gemini_api_key") || localStorage.getItem("sfd_openai_api_key");
 
     appendLog("info", `[Market Engine] Querying live Indian market intelligence for "${cleanName}" (${provider.toUpperCase()})...`);
 
@@ -2700,11 +2741,11 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
     // 2. Direct client-side Gemini / OpenAI call if API key is provided and server API wasn't available
     if (!finalData && apiKey) {
         try {
-            if (provider === "gemini") {
+            if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
                 appendLog("info", `[Market Engine] Calling Google Gemini API directly for "${cleanName}"...`);
                 finalData = await callDirectClientGemini(cleanName, apiKey);
                 source = "Google Gemini Live API";
-            } else if (provider === "openai") {
+            } else if (provider === "openai" || (apiKey && apiKey.startsWith("sk-"))) {
                 appendLog("info", `[Market Engine] Calling OpenAI API directly for "${cleanName}"...`);
                 finalData = await callDirectClientOpenAI(cleanName, apiKey);
                 source = "OpenAI Live API";
@@ -2722,7 +2763,7 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
 
     industryDataset[indKey] = finalData;
     populateIndustryDropdown();
-    
+
     // Select in form dropdown
     const indDropdown = document.getElementById("industry");
     if (indDropdown) indDropdown.value = indKey;
@@ -2737,7 +2778,34 @@ async function generateLiveIndustryData(industryName, forceRefresh = false) {
 
 function openAiConfigModal() {
     const modal = document.getElementById("aiConfigModal");
-    if (modal) modal.style.display = "flex";
+    if (!modal) return;
+
+    const savedProvider = localStorage.getItem("sfd_ai_provider") || "gemini";
+    const savedGeminiKey = localStorage.getItem("sfd_gemini_api_key") || "";
+    const savedOpenaiKey = localStorage.getItem("sfd_openai_api_key") || "";
+
+    const providerSelect = document.getElementById("modalAiProvider");
+    const geminiInput = document.getElementById("geminiApiKeyInput");
+    const openaiInput = document.getElementById("openaiApiKeyInput");
+    const geminiGroup = document.getElementById("geminiKeyGroup");
+    const openaiGroup = document.getElementById("openaiKeyGroup");
+
+    if (providerSelect) providerSelect.value = savedProvider;
+    if (geminiInput) geminiInput.value = savedGeminiKey;
+    if (openaiInput) openaiInput.value = savedOpenaiKey;
+
+    if (savedProvider === "gemini") {
+        if (geminiGroup) geminiGroup.style.display = "block";
+        if (openaiGroup) openaiGroup.style.display = "none";
+    } else if (savedProvider === "openai") {
+        if (geminiGroup) geminiGroup.style.display = "none";
+        if (openaiGroup) openaiGroup.style.display = "block";
+    } else {
+        if (geminiGroup) geminiGroup.style.display = "none";
+        if (openaiGroup) openaiGroup.style.display = "none";
+    }
+
+    modal.style.display = "flex";
 }
 
 function closeAiConfigModal() {
@@ -2806,8 +2874,8 @@ async function runLangGraphWorkflow() {
     if (selectedModel.startsWith("gemini")) provider = "gemini";
     else if (selectedModel.startsWith("gpt")) provider = "openai";
 
-    const apiKey = provider === "gemini" 
-        ? localStorage.getItem("sfd_gemini_api_key") 
+    const apiKey = provider === "gemini"
+        ? localStorage.getItem("sfd_gemini_api_key")
         : localStorage.getItem("sfd_openai_api_key");
 
     // Reset visual nodes
@@ -2943,9 +3011,9 @@ function renderAgentResults(data) {
     const fmeaContainer = document.getElementById("fmeaListContainer");
     if (fmeaContainer && fmea.length > 0) {
         fmeaContainer.innerHTML = fmea.map(item => {
-            const badgeClass = item.severity === "CRITICAL" ? "badge-critical" 
-                : item.severity === "HIGH" ? "badge-high" 
-                : item.severity === "LOW" ? "badge-low" : "badge-medium";
+            const badgeClass = item.severity === "CRITICAL" ? "badge-critical"
+                : item.severity === "HIGH" ? "badge-high"
+                    : item.severity === "LOW" ? "badge-low" : "badge-medium";
             return `
                 <div class="fmea-item">
                     <span class="fmea-badge ${badgeClass}">${item.severity}</span>

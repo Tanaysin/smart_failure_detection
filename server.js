@@ -20,6 +20,37 @@ app.use(express.static(__dirname));
 
 
 
+// In-memory project cache fallback if database connection is offline
+let inMemoryProjects = [
+    {
+        id: 1,
+        project_name: "HealthAI Pulse",
+        industry: "healthcare",
+        business_model: "B2B",
+        target_market: "Hospitals & Clinics",
+        budget: 5000000,
+        description: "AI clinical triage and diagnostics support platform."
+    },
+    {
+        id: 2,
+        project_name: "KisanSetu Agri",
+        industry: "agritech",
+        business_model: "B2B",
+        target_market: "Direct Farmers & FPOs",
+        budget: 3500000,
+        description: "IoT soil moisture and automated advisory for Indian farmers."
+    },
+    {
+        id: 3,
+        project_name: "PayFlow India",
+        industry: "fintech",
+        business_model: "SaaS",
+        target_market: "SMB Retailers",
+        budget: 8000000,
+        description: "Unified UPI & recurring subscription checkout stack."
+    }
+];
+
 // ===============================
 // POST PROJECT
 // ===============================
@@ -58,11 +89,20 @@ app.post("/projects", async (req, res) => {
 
     } catch (err) {
 
-        console.error(err);
+        console.warn("PostgreSQL unavailable, storing project in local server cache:", err.message);
+        inMemoryProjects.unshift({
+            id: Date.now(),
+            project_name: projectName,
+            industry,
+            business_model: businessModel,
+            target_market: targetMarket,
+            budget,
+            description
+        });
 
-        res.status(500).json({
-            success: false,
-            message: "Database Error"
+        res.json({
+            success: true,
+            message: "Project stored locally in server memory."
         });
 
     }
@@ -82,15 +122,12 @@ app.get("/projects", async (req, res) => {
             "SELECT * FROM projects ORDER BY id DESC"
         );
 
-        res.json(result.rows);
+        res.json(result.rows && result.rows.length > 0 ? result.rows : inMemoryProjects);
 
     } catch (err) {
 
-        console.error(err);
-
-        res.status(500).json({
-            message: "Database Error"
-        });
+        console.warn("PostgreSQL unavailable, serving fallback projects:", err.message);
+        res.json(inMemoryProjects);
 
     }
 

@@ -57,11 +57,39 @@ function generateHeuristicStrategicPlan(startup, benchmarkData, fmeaDiagnostics)
 }
 
 /**
+ * Helper for robust Gemini model generation with automatic fallback
+ */
+async function generateWithGeminiFallback(genAI, modelName, prompt) {
+    const candidateModels = [
+        modelName,
+        "gemini-2.0-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
+        "gemini-2.5-flash"
+    ].filter(Boolean);
+
+    const uniqueModels = [...new Set(candidateModels)];
+    let lastError = null;
+
+    for (const mName of uniqueModels) {
+        try {
+            const model = genAI.getGenerativeModel({ model: mName });
+            const result = await model.generateContent(prompt);
+            return result.response.text();
+        } catch (err) {
+            lastError = err;
+            console.warn(`Gemini model candidate "${mName}" failed: ${err.message}. Trying next candidate...`);
+        }
+    }
+    throw lastError;
+}
+
+/**
  * Call Gemini API for Strategic Reasoning
  */
 async function callGeminiStrategicAPI(apiKey, modelName, startup, benchmarkData, fmeaDiagnostics) {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-flash" });
+
 
     const prompt = `
 You are an elite Silicon Valley venture capitalist, startup risk auditor, and management consultant.
@@ -98,8 +126,7 @@ Respond ONLY with a valid, raw JSON object (no markdown code blocks, no backtick
 }
 `;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await generateWithGeminiFallback(genAI, modelName, prompt);
     const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
     return JSON.parse(cleanJson);
 }
@@ -268,7 +295,6 @@ async function generateFeasibilityAndSWOT(startup, benchmarkData = {}, options =
         try {
             console.log("Generating Feasibility & SWOT via Gemini...");
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-flash" });
 
             const prompt = `
 You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
@@ -326,8 +352,7 @@ Respond ONLY with a valid, raw JSON object (NO markdown code blocks, no backtick
   }
 }
 `;
-            const result = await model.generateContent(prompt);
-            const text = result.response.text();
+            const text = await generateWithGeminiFallback(genAI, modelName, prompt);
             const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
             const parsed = JSON.parse(cleanJson);
             parsed.source = `${provider}_live_api`;
@@ -583,7 +608,6 @@ async function generateAndSaveIndustryData(industryName, options = {}) {
         try {
             console.log(`Generating live Indian market data for "${industryName}" via Gemini...`);
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: modelName || "gemini-1.5-flash" });
 
             const prompt = `
 You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
@@ -610,8 +634,7 @@ Ensure:
 - investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Angel, Series A, Series B, Growth/Late-Stage).
 - competitors contains 4 actual real-world INDIAN companies/startups operating in India (e.g., from the Indian ecosystem) with realistic marketShare %, annual revenue in ₹ Crore, and total funding in ₹ Crore.
 `;
-            const result = await model.generateContent(prompt);
-            const text = result.response.text();
+            const text = await generateWithGeminiFallback(genAI, modelName, prompt);
             const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
             marketData = JSON.parse(cleanJson);
         } catch (err) {
