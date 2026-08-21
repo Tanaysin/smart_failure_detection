@@ -2647,46 +2647,12 @@ function synthesizeClientIndustryData(industryName) {
     };
 }
 
-let activeGeminiModelCache = null;
-
-async function resolveActiveGeminiModel(apiKey) {
-    if (activeGeminiModelCache) return activeGeminiModelCache;
-    try {
-        const controller = new AbortController();
-        const tid = setTimeout(() => controller.abort(), 2500);
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, { signal: controller.signal });
-        clearTimeout(tid);
-        if (res.ok) {
-            const data = await res.json();
-            const genModels = (data.models || [])
-                .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
-                .map(m => m.name.replace("models/", ""));
-            
-            const picked = genModels.find(m => m.includes("3.6-flash"))
-                || genModels.find(m => m.includes("flash"))
-                || genModels.find(m => m.includes("pro"))
-                || genModels[0];
-            
-            if (picked) {
-                activeGeminiModelCache = picked;
-                return picked;
-            }
-        }
-    } catch (e) {}
-    return "gemini-3.6-flash";
-}
-
 async function callDirectClientGemini(industryName, apiKey) {
-    const dynamicModel = await resolveActiveGeminiModel(apiKey);
     const modelsToTry = [
-        dynamicModel,
-        "gemini-3.6-flash",
-        "gemini-2.5-flash",
-        "gemini-1.5-flash-8b",
-        "gemini-1.5-flash",
-        "gemini-pro"
-    ].filter(Boolean);
-    const uniqueModels = [...new Set(modelsToTry)];
+        "gemini-flash-latest",
+        "gemini-pro-latest",
+        "gemini-2.5-flash"
+    ];
     let lastErr = null;
 
     const prompt = `You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
@@ -2713,10 +2679,10 @@ Ensure:
 - investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Angel, Series A, Series B, Growth/Late-Stage).
 - competitors contains 4 actual real-world INDIAN companies/startups operating in India with realistic marketShare %, annual revenue in ₹ Crore, and total funding in ₹ Crore.`;
 
-    for (const model of uniqueModels) {
+    for (const model of modelsToTry) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
             const response = await fetch(url, {
@@ -2779,7 +2745,7 @@ async function callDirectClientOpenAI(industryName, apiKey) {
     return JSON.parse(data.choices[0].message.content);
 }
 
-async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-3.6-flash") {
+async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-flash-latest") {
     if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
         const prompt = `You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
 Analyze this Indian startup venture:
@@ -2819,13 +2785,17 @@ Return STRICTLY a raw JSON object with this exact schema:
   }
 }`;
 
-        const dynamicModel = await resolveActiveGeminiModel(apiKey);
-        const modelsToTry = [modelName, dynamicModel, "gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-pro"].filter(Boolean);
+        const modelsToTry = [
+            modelName,
+            "gemini-flash-latest",
+            "gemini-pro-latest",
+            "gemini-2.5-flash"
+        ].filter(Boolean);
         const uniqueModels = [...new Set(modelsToTry)];
         for (const m of uniqueModels) {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 4500);
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
                 const response = await fetch(url, {
