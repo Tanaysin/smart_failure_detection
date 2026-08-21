@@ -2633,7 +2633,7 @@ function synthesizeClientIndustryData(industryName) {
 }
 
 async function callDirectClientGemini(industryName, apiKey) {
-    const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"];
+    const modelsToTry = ["gemini-2.5-flash", "gemini-1.5-pro", "gemini-pro", "gemini-2.0-flash-exp"];
     let lastErr = null;
 
     const prompt = `You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
@@ -2662,10 +2662,14 @@ Ensure:
 
     for (const model of modelsToTry) {
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4500);
+
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                signal: controller.signal,
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: prompt }] }],
                     generationConfig: {
@@ -2673,6 +2677,8 @@ Ensure:
                     }
                 })
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
@@ -2720,7 +2726,7 @@ async function callDirectClientOpenAI(industryName, apiKey) {
     return JSON.parse(data.choices[0].message.content);
 }
 
-async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-2.0-flash") {
+async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-2.5-flash") {
     if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
         const prompt = `You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
 Analyze this Indian startup venture:
@@ -2760,18 +2766,25 @@ Return STRICTLY a raw JSON object with this exact schema:
   }
 }`;
 
-        const modelsToTry = [modelName, "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"].filter(Boolean);
-        for (const m of modelsToTry) {
+        const modelsToTry = [modelName, "gemini-2.5-flash", "gemini-1.5-pro", "gemini-pro", "gemini-2.0-flash-exp"].filter(Boolean);
+        const uniqueModels = [...new Set(modelsToTry)];
+        for (const m of uniqueModels) {
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
+                    signal: controller.signal,
                     body: JSON.stringify({
                         contents: [{ parts: [{ text: prompt }] }],
                         generationConfig: { responseMimeType: "application/json" }
                     })
                 });
+
+                clearTimeout(timeoutId);
                 if (!response.ok) continue;
                 const data = await response.json();
                 const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;

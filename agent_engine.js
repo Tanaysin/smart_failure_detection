@@ -62,10 +62,10 @@ function generateHeuristicStrategicPlan(startup, benchmarkData, fmeaDiagnostics)
 async function generateWithGeminiFallback(genAI, modelName, prompt) {
     const candidateModels = [
         modelName,
-        "gemini-2.0-flash",
-        "gemini-1.5-flash",
+        "gemini-2.5-flash",
         "gemini-1.5-pro",
-        "gemini-2.5-flash"
+        "gemini-pro",
+        "gemini-2.0-flash-exp"
     ].filter(Boolean);
 
     const uniqueModels = [...new Set(candidateModels)];
