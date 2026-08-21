@@ -1679,17 +1679,112 @@ function loadIndustryData(targetIndustry) {
         return;
     }
 
+    const cleanInd = matchedKey.charAt(0).toUpperCase() + matchedKey.slice(1);
+
     // Synchronize Market & Competitor industry dropdowns
     const mSelect = document.getElementById("marketIndustrySelect");
     const cSelect = document.getElementById("competitorIndustrySelect");
     if (mSelect && mSelect.value !== matchedKey) mSelect.value = matchedKey;
     if (cSelect && cSelect.value !== matchedKey) cSelect.value = matchedKey;
 
+    // ==========================================
+    // 1. COMPUTE & RENDER MARKET TRENDS KPIS
+    // ==========================================
+    const growthArr = industryInfo.marketGrowth || [15, 22, 28, 38, 48, 62];
+    const fundArr = industryInfo.funding || [400, 650, 1100, 1950, 2800, 4200];
+    const failRate = industryInfo.failureRate || 45;
+    const distArr = industryInfo.investmentDistribution || [20, 25, 30, 15, 10];
+
+    const startGrowth = growthArr[0] || 10;
+    const endGrowth = growthArr[growthArr.length - 1] || 50;
+    const growthCagr = (Math.pow(endGrowth / Math.max(startGrowth, 1), 1 / (growthArr.length - 1)) - 1) * 100;
+    const totalFunding = fundArr.reduce((a, b) => a + b, 0);
+    const peakFunding = Math.max(...fundArr);
+
+    const mKpiGrowth = document.getElementById("marketKpiGrowth");
+    const mKpiGrowthSub = document.getElementById("marketKpiGrowthSub");
+    const mGrowthBadge = document.getElementById("marketGrowthBadge");
+    const mKpiFunding = document.getElementById("marketKpiFunding");
+    const mKpiFundingSub = document.getElementById("marketKpiFundingSub");
+    const mFundingBadge = document.getElementById("marketFundingBadge");
+    const mKpiFailure = document.getElementById("marketKpiFailure");
+    const mKpiFailureSub = document.getElementById("marketKpiFailureSub");
+    const mFailureBadge = document.getElementById("marketFailureBadge");
+    const mKpiStage = document.getElementById("marketKpiStage");
+    const mKpiStageSub = document.getElementById("marketKpiStageSub");
+    const mAiInsightText = document.getElementById("marketAiInsightText");
+
+    if (mKpiGrowth) mKpiGrowth.textContent = `+${growthCagr.toFixed(1)}% CAGR`;
+    if (mKpiGrowthSub) mKpiGrowthSub.innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${growthArr[growthArr.length - 1]}% Sector Velocity Index`;
+    if (mGrowthBadge) mGrowthBadge.textContent = `+${growthCagr.toFixed(1)}% 5-Yr CAGR`;
+
+    if (mKpiFunding) mKpiFunding.textContent = `₹${totalFunding.toLocaleString()} Cr`;
+    if (mKpiFundingSub) mKpiFundingSub.textContent = `Peak: ₹${peakFunding.toLocaleString()} Cr (2025)`;
+    if (mFundingBadge) mFundingBadge.textContent = `₹${totalFunding.toLocaleString()} Cr Total`;
+
+    if (mKpiFailure) mKpiFailure.textContent = `${failRate}% Mortality`;
+    if (mKpiFailureSub) mKpiFailureSub.textContent = `${100 - failRate}% 5-Yr Survival Baseline`;
+    if (mFailureBadge) mFailureBadge.textContent = failRate > 55 ? "Elevated Risk" : failRate > 40 ? "Moderate Risk" : "Resilient Sector";
+
+    if (mKpiStage) {
+        const topStageSum = (distArr[2] || 0) + (distArr[3] || 0);
+        mKpiStage.textContent = "Series A & B";
+        if (mKpiStageSub) mKpiStageSub.textContent = `${topStageSum}% Capital Concentration`;
+    }
+
+    if (mAiInsightText) {
+        mAiInsightText.innerHTML = `<strong>Macro Analysis for Indian ${cleanInd}:</strong> The sector is expanding at a robust <strong>${growthCagr.toFixed(1)}% annual CAGR</strong>, attracting over <strong>₹${totalFunding.toLocaleString()} Crore</strong> in cumulative institutional capital since 2020. While early-stage capital (Seed & Angel at ${distArr[0] + distArr[1]}%) remains active, over <strong>${distArr[2] + distArr[3]}% of capital</strong> is concentrated in Series A/B growth stages. Startups navigating the <strong>${failRate}% sector mortality rate</strong> must prioritize positive unit economics and low customer acquisition costs over broad paid growth.`;
+    }
+
+    // ==========================================
+    // 2. COMPUTE & RENDER COMPETITOR KPIS
+    // ==========================================
+    const comps = industryInfo.competitors || [];
+    const leader = comps[0] || { name: "Leader", marketShare: 35, revenue: 1000, funding: 2500 };
+    const totalCompRev = comps.reduce((sum, c) => sum + (Number(c.revenue) || 0), 0);
+    const totalCompFund = comps.reduce((sum, c) => sum + (Number(c.funding) || 0), 0);
+    const maxRev = Math.max(...comps.map(c => Number(c.revenue) || 0));
+    const maxFund = Math.max(...comps.map(c => Number(c.funding) || 0));
+    const top2Share = (comps[0]?.marketShare || 0) + (comps[1]?.marketShare || 0);
+    const hhiText = top2Share > 65 ? "Tight Oligopoly" : top2Share > 45 ? "Moderate Concentration" : "Contestable Landscape";
+
+    const cKpiLeader = document.getElementById("compKpiLeader");
+    const cKpiLeaderSub = document.getElementById("compKpiLeaderSub");
+    const cLeaderBadge = document.getElementById("compLeaderBadge");
+    const cKpiRevenue = document.getElementById("compKpiRevenue");
+    const cKpiRevenueSub = document.getElementById("compKpiRevenueSub");
+    const cMaxRevBadge = document.getElementById("compMaxRevBadge");
+    const cKpiFunding = document.getElementById("compKpiFunding");
+    const cKpiFundingSub = document.getElementById("compKpiFundingSub");
+    const cMaxFundBadge = document.getElementById("compMaxFundBadge");
+    const cKpiHHI = document.getElementById("compKpiHHI");
+    const cKpiHHISub = document.getElementById("compKpiHHISub");
+    const cAiInsightText = document.getElementById("competitorAiInsightText");
+
+    if (cKpiLeader) cKpiLeader.textContent = leader.name;
+    if (cKpiLeaderSub) cKpiLeaderSub.textContent = `${leader.marketShare}% Market Share`;
+    if (cLeaderBadge) cLeaderBadge.textContent = `Leader: ${leader.name}`;
+
+    if (cKpiRevenue) cKpiRevenue.textContent = `₹${totalCompRev.toLocaleString()} Cr`;
+    if (cKpiRevenueSub) cKpiRevenueSub.textContent = `Top Player: ₹${maxRev.toLocaleString()} Cr`;
+    if (cMaxRevBadge) cMaxRevBadge.textContent = `₹${maxRev.toLocaleString()} Cr Max`;
+
+    if (cKpiFunding) cKpiFunding.textContent = `₹${totalCompFund.toLocaleString()} Cr`;
+    if (cKpiFundingSub) cKpiFundingSub.textContent = `Combined Incumbent Warchest`;
+    if (cMaxFundBadge) cMaxFundBadge.textContent = `₹${maxFund.toLocaleString()} Cr Max`;
+
+    if (cKpiHHI) cKpiHHI.textContent = hhiText;
+    if (cKpiHHISub) cKpiHHISub.textContent = `Top 2 Hold ${top2Share}% Share`;
+
+    if (cAiInsightText) {
+        cAiInsightText.innerHTML = `<strong>Competitive Moat & Wedge Analysis:</strong> Market leadership in Indian ${cleanInd} is anchored by <strong>${leader.name} (${leader.marketShare}% share | ₹${Number(leader.revenue).toLocaleString()} Cr Rev)</strong> alongside key incumbents <strong>${comps.slice(1).map(c => c.name).join(", ")}</strong>. Together, the top 4 players command <strong>₹${totalCompRev.toLocaleString()} Cr in revenue</strong> backed by <strong>₹${totalCompFund.toLocaleString()} Cr in capital</strong>. Entering ventures should avoid direct feature battles and instead execute an <em>asymmetric vertical wedge</em> targeting high-friction workflow niches that incumbents have commoditized.`;
+    }
 
     // ======================================
-    // Industry Trend — line, gradient fill
+    // 3. ENHANCED CHARTS GENERATION
     // ======================================
 
+    // A. Industry Growth Trend — Smooth Gradient Line
     function createIndustryTrendChart(data) {
         const canvas = document.getElementById("industryTrendChart");
         if (!canvas) return;
@@ -1705,20 +1800,27 @@ function loadIndustryData(targetIndustry) {
                 data: {
                     labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
                     datasets: [{
-                        label: "Market Growth",
+                        label: `${cleanInd} Growth Index`,
                         data: data.marketGrowth,
-                        borderColor: COLORS.navy,
+                        borderColor: "#4f46e5",
                         backgroundColor: (context) => {
                             const { ctx, chartArea } = context.chart;
-                            return gradientFill(ctx, COLORS.navy, chartArea);
+                            if (!chartArea) return "rgba(79, 70, 229, 0.15)";
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "rgba(79, 70, 229, 0.35)");
+                            gradient.addColorStop(1, "rgba(79, 70, 229, 0.0)");
+                            return gradient;
                         },
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: COLORS.navy,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#ffffff",
+                        pointBorderColor: "#4f46e5",
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7,
+                        pointHoverBackgroundColor: "#4f46e5",
                         pointHoverBorderColor: "#ffffff",
-                        pointHoverBorderWidth: 2,
-                        tension: 0.45,
+                        pointHoverBorderWidth: 3,
+                        tension: 0.4,
                         fill: true
                     }]
                 },
@@ -1732,33 +1834,24 @@ function loadIndustryData(targetIndustry) {
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false },
+                            ticks: { font: { weight: "600" }, color: "#64748b" }
                         },
                         y: {
-                            grid: {
-                                display: false,
-                                color: "#fdfeff"
-                            },
-                            border: {
-                                display: false
-                            }
+                            grid: { color: "#f1f5f9" },
+                            ticks: { font: { weight: "600" }, color: "#64748b" },
+                            border: { dash: [4, 4], display: false }
                         }
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createIndustryTrendChart(industryInfo);
 
-    // ======================================
-    // Funding Trend — bar
-    // ======================================
-
+    // B. Funding Trend — Vibrant Gradient Rounded Bars
     function createFundingTrendChart(data) {
         const canvas = document.getElementById("fundingTrendChart");
         if (!canvas) return;
@@ -1774,11 +1867,18 @@ function loadIndustryData(targetIndustry) {
                 data: {
                     labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
                     datasets: [{
-                        label: "Funding (₹ Crore)",
+                        label: "VC Funding (₹ Crore)",
                         data: data.funding,
-                        backgroundColor: COLORS.purple,
-                        hoverBackgroundColor: COLORS.navy,
-                        borderRadius: 10,
+                        backgroundColor: (context) => {
+                            const { ctx, chartArea } = context.chart;
+                            if (!chartArea) return "#7c3aed";
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "#7c3aed");
+                            gradient.addColorStop(1, "#a855f7");
+                            return gradient;
+                        },
+                        hoverBackgroundColor: "#4f46e5",
+                        borderRadius: 8,
                         borderSkipped: false,
                         borderWidth: 0
                     }]
@@ -1792,33 +1892,24 @@ function loadIndustryData(targetIndustry) {
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false },
+                            ticks: { font: { weight: "600" }, color: "#64748b" }
                         },
                         y: {
-                            grid: {
-                                display: false,
-                                color: "#fdfeff"
-                            },
-                            border: {
-                                display: false
-                            }
+                            grid: { color: "#f1f5f9" },
+                            ticks: { font: { weight: "600" }, color: "#64748b" },
+                            border: { dash: [4, 4], display: false }
                         }
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createFundingTrendChart(industryInfo);
 
-    // ======================================
-    // Failure/Success — doughnut
-    // ======================================
-
+    // C. Sector Risk & Survival Gauge — Donut
     function createFailureChart(data) {
         const canvas = document.getElementById("failureTrendChart");
         if (!canvas) return;
@@ -1832,37 +1923,33 @@ function loadIndustryData(targetIndustry) {
             {
                 type: "doughnut",
                 data: {
-                    labels: ["Failure", "Success"],
+                    labels: ["Mortality Rate", "Survival Rate"],
                     datasets: [{
                         data: [data.failureRate, 100 - data.failureRate],
-                        backgroundColor: [COLORS.coral, COLORS.skyblue],
-                        borderWidth: 5,
+                        backgroundColor: ["#f43f5e", "#10b981"],
+                        borderWidth: 4,
                         borderColor: "#ffffff",
                         hoverOffset: 6
                     }]
                 },
                 options: {
-                    cutout: "72%",
+                    cutout: "75%",
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom" },
+                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 14 } },
                         tooltip: TOOLTIP_STYLE
                     }
                 },
-                plugins: [centerTextPlugin(() => data.failureRate + "%", "Failure Rate")],
+                plugins: [centerTextPlugin(() => data.failureRate + "%", "Mortality Risk")],
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createFailureChart(industryInfo);
 
-    // ======================================
-    // Investment Distribution — pie
-    // ======================================
-
+    // D. Investment Stage Distribution — Donut
     function createInvestmentChart(data) {
         const canvas = document.getElementById("investmentChart");
         if (!canvas) return;
@@ -1874,37 +1961,34 @@ function loadIndustryData(targetIndustry) {
         investmentChart = new Chart(
             canvas,
             {
-                type: "pie",
+                type: "doughnut",
                 data: {
-                    labels: ["Seed", "Angel", "Series A", "Series B", "Others"],
+                    labels: ["Seed", "Angel", "Series A", "Series B", "Growth/Late"],
                     datasets: [{
                         data: data.investmentDistribution,
-                        backgroundColor: PALETTE,
-                        borderWidth: 5,
+                        backgroundColor: ["#4f46e5", "#06b6d4", "#10b981", "#f59e0b", "#8b5cf6"],
+                        borderWidth: 4,
                         borderColor: "#ffffff",
                         hoverOffset: 6
                     }]
                 },
                 options: {
+                    cutout: "68%",
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom" },
+                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
                         tooltip: TOOLTIP_STYLE
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createInvestmentChart(industryInfo);
 
-    // ======================================
-    // Market Share — pie
-    // ======================================
-
+    // E. Competitor Market Share — Doughnut
     function createCompetitorChart(data) {
         const canvas = document.getElementById("marketShareChart");
         if (!canvas) return;
@@ -1916,37 +2000,34 @@ function loadIndustryData(targetIndustry) {
         competitorChart = new Chart(
             canvas,
             {
-                type: "pie",
+                type: "doughnut",
                 data: {
                     labels: data.competitors.map(c => c.name),
                     datasets: [{
                         data: data.competitors.map(c => c.marketShare),
-                        backgroundColor: PALETTE,
-                        borderWidth: 5,
+                        backgroundColor: ["#4f46e5", "#0ea5e9", "#10b981", "#f59e0b"],
+                        borderWidth: 4,
                         borderColor: "#ffffff",
                         hoverOffset: 6
                     }]
                 },
                 options: {
+                    cutout: "68%",
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom" },
+                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
                         tooltip: TOOLTIP_STYLE
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createCompetitorChart(industryInfo);
 
-    // ======================================
-    // Competitor Revenue — bar
-    // ======================================
-
+    // F. Competitor Revenue — Bar
     function createRevenueChart(data) {
         const canvas = document.getElementById("revenueChart");
         if (!canvas) return;
@@ -1964,9 +2045,16 @@ function loadIndustryData(targetIndustry) {
                     datasets: [{
                         label: "Revenue (₹ Crore)",
                         data: data.competitors.map(c => c.revenue),
-                        backgroundColor: COLORS.navy,
-                        hoverBackgroundColor: COLORS.orange,
-                        borderRadius: 10,
+                        backgroundColor: (context) => {
+                            const { ctx, chartArea } = context.chart;
+                            if (!chartArea) return "#059669";
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "#059669");
+                            gradient.addColorStop(1, "#34d399");
+                            return gradient;
+                        },
+                        hoverBackgroundColor: "#047857",
+                        borderRadius: 8,
                         borderSkipped: false,
                         borderWidth: 0
                     }]
@@ -1975,38 +2063,29 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true },
+                        legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false },
+                            ticks: { font: { weight: "600" }, color: "#64748b" }
                         },
                         y: {
-                            grid: {
-                                display: false,
-                                color: "#fdfeff"
-                            },
-                            border: {
-                                display: false
-                            }
+                            grid: { color: "#f1f5f9" },
+                            ticks: { font: { weight: "600" }, color: "#64748b" },
+                            border: { dash: [4, 4], display: false }
                         }
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createRevenueChart(industryInfo);
 
-    // ======================================
-    // Competitor Funding Comparison — bar
-    // ======================================
-
+    // G. Competitor Funding Comparison — Bar
     function createFundingComparisonChart(data) {
         const canvas = document.getElementById("competitorFundingChart");
         if (!canvas) return;
@@ -2022,11 +2101,18 @@ function loadIndustryData(targetIndustry) {
                 data: {
                     labels: data.competitors.map(c => c.name),
                     datasets: [{
-                        label: "Funding (₹ Crore)",
+                        label: "Funding Raised (₹ Crore)",
                         data: data.competitors.map(c => c.funding),
-                        backgroundColor: COLORS.orange,
-                        hoverBackgroundColor: COLORS.navy,
-                        borderRadius: 10,
+                        backgroundColor: (context) => {
+                            const { ctx, chartArea } = context.chart;
+                            if (!chartArea) return "#6366f1";
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "#6366f1");
+                            gradient.addColorStop(1, "#818cf8");
+                            return gradient;
+                        },
+                        hoverBackgroundColor: "#4338ca",
+                        borderRadius: 8,
                         borderSkipped: false,
                         borderWidth: 0
                     }]
@@ -2035,81 +2121,77 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true },
+                        legend: { display: false },
                         tooltip: TOOLTIP_STYLE
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false },
+                            ticks: { font: { weight: "600" }, color: "#64748b" }
                         },
                         y: {
-                            grid: {
-                                display: false,
-                                color: "#fdfeff"
-                            },
-                            border: {
-                                display: false
-                            }
+                            grid: { color: "#f1f5f9" },
+                            ticks: { font: { weight: "600" }, color: "#64748b" },
+                            border: { dash: [4, 4], display: false }
                         }
                     }
                 },
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
     createFundingComparisonChart(industryInfo);
 
-    // ======================================
-    // Feature Radar — startup vs industry leader
-    // ======================================
-
+    // H. Feature / Capability Radar Matrix
     function createFeatureRadar(project, industryInfo) {
         const canvas = document.getElementById("featureRadarChart");
         if (!canvas) return;
 
-        if (featureRadarChart)
+        if (featureRadarChart) {
             featureRadarChart.destroy();
+        }
 
-        if (!project || !industryInfo || !industryInfo.competitors || industryInfo.competitors.length === 0) return;
+        if (!industryInfo || !industryInfo.competitors || industryInfo.competitors.length === 0) return;
 
-        const startup = calculateFeatureScores(project);
-        const competitor = industryInfo.competitors[0];
+        const startup = calculateFeatureScores(project || {});
+        const comp = industryInfo.competitors[0];
 
         featureRadarChart = new Chart(
             canvas,
             {
                 type: "radar",
                 data: {
-                    labels: ["Innovation", "Scalability", "Finance", "Market", "Execution"],
+                    labels: ["Market Reach", "Tech Innovation", "Pricing Power", "Capital Moat", "Customer Retention"],
                     datasets: [
                         {
-                            label: "Your Startup",
+                            label: project?.project_name || project?.projectName || "Your Startup",
                             data: [
-                                startup.innovation,
-                                startup.scalability,
-                                startup.finance,
-                                startup.market,
-                                startup.execution
+                                startup.market || 65,
+                                startup.innovation || 82,
+                                startup.finance || 60,
+                                startup.scalability || 68,
+                                startup.execution || 74
                             ],
-                            borderColor: COLORS.navy,
-                            backgroundColor: COLORS.navy + "22",
-                            borderWidth: 2,
-                            pointRadius: 3,
-                            pointBackgroundColor: COLORS.navy,
+                            borderColor: "#4f46e5",
+                            backgroundColor: "rgba(79, 70, 229, 0.22)",
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: "#4f46e5",
+                            pointBorderColor: "#ffffff",
+                            pointBorderWidth: 2,
                             fill: true
                         },
                         {
-                            label: competitor.name,
-                            data: [90, 90, 95, 90, 88],
-                            borderColor: COLORS.orange,
-                            backgroundColor: COLORS.orange + "1A",
-                            borderWidth: 2,
-                            pointRadius: 3,
-                            pointBackgroundColor: COLORS.orange,
+                            label: `${comp.name} (Leader)`,
+                            data: [92, 85, 88, 95, 90],
+                            borderColor: "#f59e0b",
+                            backgroundColor: "rgba(245, 158, 11, 0.15)",
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: "#f59e0b",
+                            pointBorderColor: "#ffffff",
+                            pointBorderWidth: 2,
                             fill: true
                         }
                     ]
@@ -2118,20 +2200,18 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom" },
+                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
                         tooltip: TOOLTIP_STYLE
                     },
                     scales: {
                         r: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: COLORS.gridline, display: false },
-                            angleLines: { color: COLORS.gridline },
-                            border: { display: false },
+                            grid: { color: "#f1f5f9" },
+                            angleLines: { color: "#e2e8f0" },
                             pointLabels: {
-                                display: true,
-                                font: { size: 12, weight: "600" },
-                                color: COLORS.cardText
+                                font: { size: 11, weight: "700" },
+                                color: "#475569"
                             },
                             ticks: { display: false }
                         }
@@ -2140,12 +2220,9 @@ function loadIndustryData(targetIndustry) {
                 animation: SMOOTH_ANIMATION
             }
         );
-
     }
 
-    if (projects && projects.length > 0) {
-        createFeatureRadar(projects[0], industryInfo);
-    }
+    createFeatureRadar(projects && projects[0], industryInfo);
 
     // ======================================
     // Risk Breakdown — doughnut

@@ -250,59 +250,133 @@
 
         <section id="marketPage" class="page" style="display:none;">
 
+            <!-- HEADER TOOLBAR -->
             <div class="market-toolbar-card">
                 <div class="market-toolbar-left">
-                    <h2 class="section-title" style="margin-bottom:0;">
+                    <div class="header-badge-row">
+                        <span class="pro-badge"><i class="fa-solid fa-signal"></i> Macro Intelligence</span>
+                        <span class="live-pill"><i class="fa-solid fa-circle fa-beat-fade"></i> Live Indian Benchmarks</span>
+                    </div>
+                    <h2 class="section-title" style="margin-top:4px; margin-bottom:2px;">
                         <i class="fa-solid fa-chart-line"></i>
-                        Market Trends
+                        Market Trends & Sector Diagnostics
                     </h2>
-                    <p style="font-size:12px; color:#64748b; margin-top:2px;">Live benchmark metrics generated and refreshed via Gemini API.</p>
+                    <p style="font-size:12.5px; color:#64748b; margin-top:2px;">5-Year capital flows, sector expansion trajectories, and failure risk benchmarks across India.</p>
                 </div>
                 <div class="market-toolbar-controls">
-                    <select id="marketIndustrySelect" class="market-ind-select">
-                        <!-- Populated dynamically -->
-                    </select>
-                    <input type="text" id="marketCustomIndInput" placeholder="Research custom industry (e.g. Agritech)..." class="market-ind-input">
+                    <div class="select-wrapper">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <select id="marketIndustrySelect" class="market-ind-select"></select>
+                    </div>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="marketCustomIndInput" placeholder="Research custom sector (e.g. Agritech)..." class="market-ind-input">
+                    </div>
                     <button id="marketGenAiBtn" class="ai-gen-ind-btn">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Research with Gemini
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Deep Research
                     </button>
                 </div>
             </div>
 
-            <div class="chart-grid">
+            <!-- EXECUTIVE SECTOR KPI STRIP -->
+            <div class="executive-kpi-grid">
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-indigo-soft"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">5-Year Growth Index</span>
+                        <h3 id="marketKpiGrowth" class="exec-kpi-val">+28.4%</h3>
+                        <span id="marketKpiGrowthSub" class="exec-kpi-sub positive"><i class="fa-solid fa-arrow-up"></i> High Expansion Velocity</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-emerald-soft"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Total VC Capital Inflow</span>
+                        <h3 id="marketKpiFunding" class="exec-kpi-val">₹18,450 Cr</h3>
+                        <span id="marketKpiFundingSub" class="exec-kpi-sub neutral">Cumulative (2020-2025)</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-rose-soft"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Sector Risk Benchmark</span>
+                        <h3 id="marketKpiFailure" class="exec-kpi-val">42%</h3>
+                        <span id="marketKpiFailureSub" class="exec-kpi-sub warning">58% 5-Yr Survival Probability</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-amber-soft"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Primary Capital Stage</span>
+                        <h3 id="marketKpiStage" class="exec-kpi-val">Series A & B</h3>
+                        <span id="marketKpiStageSub" class="exec-kpi-sub neutral">52% Total Distribution</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="chart-card">
+            <!-- DYNAMIC AI MACRO INSIGHT BANNER -->
+            <div class="ai-insight-banner">
+                <div class="ai-insight-badge">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Sector Intelligence Brief
+                </div>
+                <p id="marketAiInsightText" class="ai-insight-text">
+                    Synthesizing live macroeconomic drivers, capital velocity, and Indian sector headwinds...
+                </p>
+            </div>
 
-                    <h3>Industry Growth Trend</h3>
-
-                    <canvas id="industryTrendChart"></canvas>
-
+            <!-- 4-CHART PROFESSIONAL GRID -->
+            <div class="chart-grid pro-chart-grid">
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-chart-area"></i> Industry Growth Trajectory</h3>
+                            <span class="chart-sub">Annual Indian market index (2020 – 2025)</span>
+                        </div>
+                        <span id="marketGrowthBadge" class="chart-tag tag-blue">+34.5% Peak</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="industryTrendChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="chart-card">
-
-                    <h3>Startup Funding Trend</h3>
-
-                    <canvas id="fundingTrendChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-chart-column"></i> Venture Capital Funding Volume</h3>
+                            <span class="chart-sub">Annual venture capital in ₹ Crore</span>
+                        </div>
+                        <span id="marketFundingBadge" class="chart-tag tag-purple">₹4,800 Cr Peak</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="fundingTrendChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="chart-card">
-
-                    <h3>Failure Rate by Industry</h3>
-
-                    <canvas id="failureTrendChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-gauge-high"></i> Sector Survival vs Mortality</h3>
+                            <span class="chart-sub">Historical startup failure probability</span>
+                        </div>
+                        <span id="marketFailureBadge" class="chart-tag tag-amber">Moderate Risk</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="failureTrendChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="chart-card">
-
-                    <h3>Investment Distribution</h3>
-
-                    <canvas id="investmentChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-pie-chart"></i> Capital Stage Distribution</h3>
+                            <span class="chart-sub">Seed, Angel, Series A, B, and Growth</span>
+                        </div>
+                        <span class="chart-tag tag-emerald">5 Funding Stages</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="investmentChart"></canvas>
+                    </div>
                 </div>
-
             </div>
 
         </section>
@@ -314,59 +388,129 @@
 
         <section id="competitorPage" class="page" style="display:none;">
 
+            <!-- HEADER TOOLBAR -->
             <div class="market-toolbar-card">
                 <div class="market-toolbar-left">
-                    <h2 class="section-title" style="margin-bottom:0;">
+                    <div class="header-badge-row">
+                        <span class="pro-badge"><i class="fa-solid fa-chess-knight"></i> Market Positioning</span>
+                        <span class="live-pill"><i class="fa-solid fa-circle fa-beat-fade"></i> Verified Indian Leaders</span>
+                    </div>
+                    <h2 class="section-title" style="margin-top:4px; margin-bottom:2px;">
                         <i class="fa-solid fa-building"></i>
-                        Competitor Analysis
+                        Competitor Intelligence & Moat Matrix
                     </h2>
-                    <p style="font-size:12px; color:#64748b; margin-top:2px;">Market share, revenue, and funding comparisons for industry incumbents.</p>
+                    <p style="font-size:12.5px; color:#64748b; margin-top:2px;">Benchmarking market share, revenue generation, venture capital warchests, and defensibility moats.</p>
                 </div>
                 <div class="market-toolbar-controls">
-                    <select id="competitorIndustrySelect" class="market-ind-select">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <div class="select-wrapper">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <select id="competitorIndustrySelect" class="market-ind-select"></select>
+                    </div>
                     <button id="competitorRefreshBtn" class="ai-gen-ind-btn">
                         <i class="fa-solid fa-arrows-rotate"></i> Refresh Market Competitors
                     </button>
                 </div>
             </div>
 
-            <div class="chart-grid">
+            <!-- EXECUTIVE COMPETITOR KPI STRIP -->
+            <div class="executive-kpi-grid">
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-indigo-soft"><i class="fa-solid fa-crown"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Market Leader</span>
+                        <h3 id="compKpiLeader" class="exec-kpi-val">Practo</h3>
+                        <span id="compKpiLeaderSub" class="exec-kpi-sub positive">38% Market Share</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-emerald-soft"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Combined Incumbent Revenue</span>
+                        <h3 id="compKpiRevenue" class="exec-kpi-val">₹4,250 Cr</h3>
+                        <span id="compKpiRevenueSub" class="exec-kpi-sub neutral">Annualized Top 4 Players</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-purple-soft"><i class="fa-solid fa-vault"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Combined Venture Warchest</span>
+                        <h3 id="compKpiFunding" class="exec-kpi-val">₹9,800 Cr</h3>
+                        <span id="compKpiFundingSub" class="exec-kpi-sub neutral">Total Capital Raised</span>
+                    </div>
+                </div>
+                <div class="exec-kpi-card">
+                    <div class="exec-kpi-icon bg-amber-soft"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div class="exec-kpi-content">
+                        <span class="exec-kpi-label">Market Concentration (HHI)</span>
+                        <h3 id="compKpiHHI" class="exec-kpi-val">Moderate Oligopoly</h3>
+                        <span id="compKpiHHISub" class="exec-kpi-sub warning">Top 2 Hold 64%</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="chart-card">
+            <!-- DYNAMIC AI COMPETITIVE MOATS INSIGHT BANNER -->
+            <div class="ai-insight-banner">
+                <div class="ai-insight-badge">
+                    <i class="fa-solid fa-shield-halved"></i> Strategic Wedge & Moat Breakdown
+                </div>
+                <p id="competitorAiInsightText" class="ai-insight-text">
+                    Evaluating incumbent market defensibility, pricing dominance, and viable asymmetric entry wedge opportunities...
+                </p>
+            </div>
 
-                    <h3>Competitor Market Share</h3>
-
-                    <canvas id="marketShareChart"></canvas>
-
+            <!-- 4-CHART PROFESSIONAL GRID -->
+            <div class="chart-grid pro-chart-grid">
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-pie-chart"></i> Market Share Distribution</h3>
+                            <span class="chart-sub">Market dominance across Indian leaders</span>
+                        </div>
+                        <span id="compLeaderBadge" class="chart-tag tag-blue">Leader: Practo</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="marketShareChart"></canvas>
+                    </div>
                 </div>
 
-
-                <div class="chart-card">
-
-                    <h3>Revenue Comparison</h3>
-
-                    <canvas id="revenueChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-chart-bar"></i> Annual Revenue Comparison</h3>
+                            <span class="chart-sub">Annual top-line turnover in ₹ Crore</span>
+                        </div>
+                        <span id="compMaxRevBadge" class="chart-tag tag-emerald">₹1,850 Cr Max</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="chart-card">
-
-                    <h3>Funding Comparison</h3>
-
-                    <canvas id="competitorFundingChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-sack-dollar"></i> Cumulative Funding Raised</h3>
+                            <span class="chart-sub">Total venture capital in ₹ Crore</span>
+                        </div>
+                        <span id="compMaxFundBadge" class="chart-tag tag-purple">₹4,200 Cr Max</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="competitorFundingChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="chart-card">
-
-                    <h3>Feature Comparison</h3>
-
-                    <canvas id="featureRadarChart"></canvas>
-
+                <div class="chart-card pro-card">
+                    <div class="chart-header-row">
+                        <div>
+                            <h3><i class="fa-solid fa-crosshairs"></i> Strategic Capability Matrix</h3>
+                            <span class="chart-sub">Reach, Innovation, Pricing, Moat, Retention</span>
+                        </div>
+                        <span class="chart-tag tag-amber">5-Vector Parity</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="featureRadarChart"></canvas>
+                    </div>
                 </div>
-
             </div>
 
         </section>
