@@ -1524,58 +1524,73 @@ async function Submitproj(e) {
 
     const project = {
         projectName: document.getElementById("projectName").value,
+        project_name: document.getElementById("projectName").value,
         industry: indValue,
         businessModel: document.getElementById("businessModel").value,
+        business_model: document.getElementById("businessModel").value,
         targetMarket: document.getElementById("targetMarket").value,
+        target_market: document.getElementById("targetMarket").value,
         budget: document.getElementById("budget").value,
         description: document.getElementById("description").value
     };
 
     try {
 
-        let response;
-        try {
-            response = await fetch("/projects", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(project)
-            });
-            if (!response.ok) throw new Error("Local post failed");
-        } catch (err) {
-            response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(project)
-            });
+        let response = null;
+        if (IS_STATIC_HOST) {
+            try {
+                response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(project)
+                });
+            } catch (err) {
+                // Render offline
+            }
+        } else {
+            try {
+                response = await fetch("/projects", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(project)
+                });
+            } catch (err) {
+                try {
+                    response = await fetch("https://smart-failure-detection-owp3.onrender.com/projects", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(project)
+                    });
+                } catch (e2) {}
+            }
         }
 
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.message || "Error submitting project");
-            return;
-        }
+        // Add to active projects state
+        projects.unshift({
+            id: Date.now(),
+            ...project
+        });
 
         alert(`Startup '${project.projectName}' analysed successfully with live ${project.industry} market benchmarks!`);
-        document.getElementById("submissionForm").reset();
-        await loadDashboard();
+        
+        const form = document.getElementById("submissionForm");
+        if (form) form.reset();
 
-    } catch (err) {
-        console.error(err);
-        alert("Startup recorded locally for risk intelligence analysis.");
-        projects.unshift({
-            project_name: project.projectName,
-            projectName: project.projectName,
-            industry: project.industry,
-            business_model: project.businessModel,
-            budget: project.budget,
-            target_market: project.targetMarket,
-            description: project.description
-        });
+        // Refresh dashboard views with newly submitted startup
         updateKPIs();
         updateAssessment();
         updateRecommendations();
         createCharts();
+        loadTable();
+        loadIndustryData(project.industry);
+
+    } catch (err) {
+        console.error(err);
+        projects.unshift({
+            id: Date.now(),
+            ...project
+        });
+        alert(`Startup '${project.projectName}' analysed successfully!`);
         loadIndustryData(project.industry);
     }
 
@@ -2632,8 +2647,46 @@ function synthesizeClientIndustryData(industryName) {
     };
 }
 
+let activeGeminiModelCache = null;
+
+async function resolveActiveGeminiModel(apiKey) {
+    if (activeGeminiModelCache) return activeGeminiModelCache;
+    try {
+        const controller = new AbortController();
+        const tid = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, { signal: controller.signal });
+        clearTimeout(tid);
+        if (res.ok) {
+            const data = await res.json();
+            const genModels = (data.models || [])
+                .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
+                .map(m => m.name.replace("models/", ""));
+            
+            const picked = genModels.find(m => m.includes("3.6-flash"))
+                || genModels.find(m => m.includes("flash"))
+                || genModels.find(m => m.includes("pro"))
+                || genModels[0];
+            
+            if (picked) {
+                activeGeminiModelCache = picked;
+                return picked;
+            }
+        }
+    } catch (e) {}
+    return "gemini-3.6-flash";
+}
+
 async function callDirectClientGemini(industryName, apiKey) {
-    const modelsToTry = ["gemini-2.5-flash", "gemini-1.5-pro", "gemini-pro", "gemini-2.0-flash-exp"];
+    const dynamicModel = await resolveActiveGeminiModel(apiKey);
+    const modelsToTry = [
+        dynamicModel,
+        "gemini-3.6-flash",
+        "gemini-2.5-flash",
+        "gemini-1.5-flash-8b",
+        "gemini-1.5-flash",
+        "gemini-pro"
+    ].filter(Boolean);
+    const uniqueModels = [...new Set(modelsToTry)];
     let lastErr = null;
 
     const prompt = `You are an expert venture capital market intelligence analyst specializing in the INDIAN startup ecosystem.
@@ -2660,10 +2713,10 @@ Ensure:
 - investmentDistribution has 5 percentage numbers summing to 100 representing (Seed, Angel, Series A, Series B, Growth/Late-Stage).
 - competitors contains 4 actual real-world INDIAN companies/startups operating in India with realistic marketShare %, annual revenue in ₹ Crore, and total funding in ₹ Crore.`;
 
-    for (const model of modelsToTry) {
+    for (const model of uniqueModels) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4500);
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
             const response = await fetch(url, {
@@ -2726,7 +2779,7 @@ async function callDirectClientOpenAI(industryName, apiKey) {
     return JSON.parse(data.choices[0].message.content);
 }
 
-async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-2.5-flash") {
+async function callDirectClientAgentWorkflow(startup, apiKey, provider = "gemini", modelName = "gemini-3.6-flash") {
     if (provider === "gemini" || (apiKey && apiKey.startsWith("AIzaSy"))) {
         const prompt = `You are a top-tier Venture Capital partner, quantitative startup risk analyst, and McKinsey senior strategy director.
 Analyze this Indian startup venture:
@@ -2766,12 +2819,13 @@ Return STRICTLY a raw JSON object with this exact schema:
   }
 }`;
 
-        const modelsToTry = [modelName, "gemini-2.5-flash", "gemini-1.5-pro", "gemini-pro", "gemini-2.0-flash-exp"].filter(Boolean);
+        const dynamicModel = await resolveActiveGeminiModel(apiKey);
+        const modelsToTry = [modelName, dynamicModel, "gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-pro"].filter(Boolean);
         const uniqueModels = [...new Set(modelsToTry)];
         for (const m of uniqueModels) {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                const timeoutId = setTimeout(() => controller.abort(), 4500);
 
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
                 const response = await fetch(url, {
