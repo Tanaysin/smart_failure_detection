@@ -850,12 +850,9 @@ function updateAssessment() {
     // STREAMLINED REPORT RENDER
     // ==============================
 
-    const container = document.getElementById("assessmentReportContainer") || document.querySelector(".assessment");
-    if (!container) return;
-
-    let pillClass = "medium";
-    if (overall >= 70) pillClass = "high";
-    else if (overall <= 40) pillClass = "low";
+    const runwayMonths = Math.max(6, Math.min(24, Math.round(Number(project.budget || 500000) / 45000)));
+    const monthlyBurn = Math.round(Number(project.budget || 500000) / runwayMonths);
+    const capitalStatus = Number(project.budget || 0) >= 1000000 ? "Strong Runway Buffer" : Number(project.budget || 0) >= 400000 ? "Manageable Capital Float" : "Lean Pre-Seed Buffer";
 
     container.innerHTML = `
         <!-- Top Executive Summary Bar -->
@@ -869,7 +866,7 @@ function updateAssessment() {
                     <span class="info-chip primary"><strong>${project.project_name || project.projectName}</strong></span>
                     <span class="info-chip"><i class="fa-solid fa-layer-group"></i> ${project.industry}</span>
                     <span class="info-chip"><i class="fa-solid fa-briefcase"></i> ${project.business_model || project.businessModel}</span>
-                    <span class="info-chip"><i class="fa-solid fa-wallet"></i> ₹${Number(project.budget || 0).toLocaleString()}</span>
+                    <span class="info-chip"><i class="fa-solid fa-wallet"></i> ₹${Number(project.budget || 0).toLocaleString()} (${runwayMonths} Mo Runway)</span>
                 </div>
             </div>
             <div class="report-header-right">
@@ -902,7 +899,7 @@ function updateAssessment() {
                 </button>
             </div>
             <span class="assessment-view-hint">
-                <i class="fa-solid fa-desktop" style="color:#4f46e5;"></i> Zero-Scroll Executive Layout
+                <i class="fa-solid fa-coins" style="color:#059669;"></i> Runway: ~₹${monthlyBurn.toLocaleString()}/mo burn | ${capitalStatus}
             </span>
         </div>
 
@@ -921,7 +918,7 @@ function updateAssessment() {
                     <div class="pano-risk-list">
                         <div class="pano-risk-item">
                             <div class="pano-risk-meta">
-                                <span>Financial Capital</span>
+                                <span>Financial Capital Risk</span>
                                 <span>${scores.financial}%</span>
                             </div>
                             <div class="pano-risk-bar-bg">
@@ -941,7 +938,7 @@ function updateAssessment() {
 
                         <div class="pano-risk-item">
                             <div class="pano-risk-meta">
-                                <span>Business Model</span>
+                                <span>Business Model Risk</span>
                                 <span>${scores.business}%</span>
                             </div>
                             <div class="pano-risk-bar-bg">
@@ -971,9 +968,13 @@ function updateAssessment() {
                     </div>
 
                     <div class="pano-findings-box">
-                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Key Diagnostic Notes</h4>
+                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Diagnostic Insights & Runway</h4>
                         <div class="pano-findings-list">
-                            ${findings.slice(0, 3).map(f => `
+                            <div class="pano-finding-pill">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span><strong>Runway Buffer:</strong> ~${runwayMonths} months at ₹${monthlyBurn.toLocaleString()}/mo burn target.</span>
+                            </div>
+                            ${findings.slice(0, 2).map(f => `
                                 <div class="pano-finding-pill">
                                     <i class="fa-solid fa-circle-check"></i>
                                     <span>${f}</span>
@@ -1004,7 +1005,7 @@ function updateAssessment() {
 
                     ${feasibility.verdict ? `
                         <div class="pano-verdict-box">
-                            "${feasibility.verdict.slice(0, 110)}${feasibility.verdict.length > 110 ? '...' : ''}"
+                            "${feasibility.verdict.slice(0, 115)}${feasibility.verdict.length > 115 ? '...' : ''}"
                         </div>
                     ` : ""}
 
@@ -1109,14 +1110,14 @@ function updateAssessment() {
             </div>
         </div>
 
-        <!-- VIEW 2: RISK BREAKDOWN TAB -->
+        <!-- VIEW 2: RISK BREAKDOWN TAB (Expanded Deep Dive) -->
         <div id="view-risk" class="assessment-detail-view">
             <div class="assessment-overview-grid">
                 <div class="report-col-card" style="grid-column: span 2;">
                     <div class="card-section-header">
                         <div>
-                            <h3><i class="fa-solid fa-gauge-high" style="color:#ef4444;"></i> Risk Diagnostic Breakdown</h3>
-                            <span class="card-section-sub">Comprehensive failure mode risk evaluation across 5 operational vectors</span>
+                            <h3><i class="fa-solid fa-gauge-high" style="color:#ef4444;"></i> In-Depth Risk & Failure Vector Diagnostics</h3>
+                            <span class="card-section-sub">Detailed root-cause analysis and operational vulnerability breakdown</span>
                         </div>
                         <span class="risk-score-pill ${pillClass}">Overall: ${overall}% (${level} Risk)</span>
                     </div>
@@ -1130,6 +1131,7 @@ function updateAssessment() {
                             <div class="risk-meter-bar-bg">
                                 <div class="risk-meter-bar-fill ${scores.financial >= 60 ? 'fill-risk-high' : scores.financial >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.financial}%;"></div>
                             </div>
+                            <p style="font-size:11px; color:#64748b; margin:2px 0 0 0;">Evaluates runway float, initial capital adequacy, and burn rate sustainability.</p>
                         </div>
 
                         <div class="risk-meter-item">
@@ -1140,6 +1142,7 @@ function updateAssessment() {
                             <div class="risk-meter-bar-bg">
                                 <div class="risk-meter-bar-fill ${scores.market >= 60 ? 'fill-risk-high' : scores.market >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.market}%;"></div>
                             </div>
+                            <p style="font-size:11px; color:#64748b; margin:2px 0 0 0;">Evaluates incumbent market share concentration, pricing power, and buyer lock-in.</p>
                         </div>
 
                         <div class="risk-meter-item">
@@ -1150,6 +1153,7 @@ function updateAssessment() {
                             <div class="risk-meter-bar-bg">
                                 <div class="risk-meter-bar-fill ${scores.business >= 60 ? 'fill-risk-high' : scores.business >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.business}%;"></div>
                             </div>
+                            <p style="font-size:11px; color:#64748b; margin:2px 0 0 0;">Evaluates gross margin retention, customer payback period, and revenue recurring rate.</p>
                         </div>
 
                         <div class="risk-meter-item">
@@ -1160,32 +1164,39 @@ function updateAssessment() {
                             <div class="risk-meter-bar-bg">
                                 <div class="risk-meter-bar-fill ${scores.execution >= 60 ? 'fill-risk-high' : scores.execution >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.execution}%;"></div>
                             </div>
+                            <p style="font-size:11px; color:#64748b; margin:2px 0 0 0;">Evaluates go-to-market speed, technical feasibility, and team operational capability.</p>
                         </div>
                     </div>
 
                     <div class="findings-box-executive" style="margin-top:14px;">
-                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> AI Diagnostic Key Observations</h4>
+                        <h4><i class="fa-solid fa-list-check"></i> Tactical Mitigation Directives</h4>
                         <div class="findings-pill-list">
-                            ${findings.map(f => `
-                                <div class="finding-pill-item">
-                                    <i class="fa-solid fa-circle-check" style="color:#4f46e5;"></i>
-                                    <span>${f}</span>
-                                </div>
-                            `).join("")}
+                            <div class="finding-pill-item">
+                                <i class="fa-solid fa-shield-halved" style="color:#4f46e5;"></i>
+                                <span><strong>Runway Management:</strong> Restrict monthly burn to ₹${monthlyBurn.toLocaleString()} to preserve ${runwayMonths} months of development runway before seeking external financing.</span>
+                            </div>
+                            <div class="finding-pill-item">
+                                <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i>
+                                <span><strong>GTM Wedge:</strong> Target high-friction niche workflows where incumbent pricing is uncompetitive to accelerate early paid conversion.</span>
+                            </div>
+                            <div class="finding-pill-item">
+                                <i class="fa-solid fa-arrows-split-up-and-left" style="color:#10b981;"></i>
+                                <span><strong>Monetization Architecture:</strong> Implement upfront annual prepayments with discounts to generate negative working capital and lower cash burn.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- VIEW 3: FEASIBILITY MATRIX TAB -->
+        <!-- VIEW 3: FEASIBILITY MATRIX TAB (Expanded Deep Dive) -->
         <div id="view-feasibility" class="assessment-detail-view">
             <div class="assessment-overview-grid">
                 <div class="report-col-card" style="grid-column: span 2;">
                     <div class="card-section-header">
                         <div>
                             <h3><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> Venture Feasibility & GTM Viability</h3>
-                            <span class="card-section-sub">Detailed assessment of business viability across critical market criteria</span>
+                            <span class="card-section-sub">Comprehensive commercial viability index and operational readiness targets</span>
                         </div>
                         <span class="viability-badge-pill">${feasibility.status} (${feasibility.overall}% Index)</span>
                     </div>
@@ -1206,7 +1217,7 @@ function updateAssessment() {
                             <div class="dim-compact-bar-bg">
                                 <div class="dim-compact-bar-fill fill-purple" style="width:${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%;"></div>
                             </div>
-                            <p class="dim-compact-insight">${feasibility.dimensions?.financial?.insight || "Runway and capital burn adequacy."}</p>
+                            <p class="dim-compact-insight">${feasibility.dimensions?.financial?.insight || "Runway adequacy and initial burn sustainability."}</p>
                         </div>
 
                         <div class="dim-compact-item">
@@ -1246,7 +1257,7 @@ function updateAssessment() {
             </div>
         </div>
 
-        <!-- VIEW 4: 2X2 SWOT MATRIX TAB -->
+        <!-- VIEW 4: 2X2 SWOT MATRIX TAB (Expanded Deep Dive) -->
         <div id="view-swot" class="assessment-detail-view">
             <div class="report-col-card swot-full-card">
                 <div class="card-section-header">
