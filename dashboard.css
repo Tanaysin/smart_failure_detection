@@ -457,8 +457,8 @@ transform:translateY(-8px);
 .assessment-dashboard-container {
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    margin-bottom: 28px;
+    gap: 14px;
+    margin-bottom: 20px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -466,15 +466,15 @@ transform:translateY(-8px);
 
 .report-top-header {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 18px 24px;
+    border-radius: 14px;
+    padding: 12px 20px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.035);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
     position: relative;
     overflow: hidden;
 }
@@ -492,38 +492,38 @@ transform:translateY(-8px);
 .report-header-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .report-header-title {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 800;
     color: #0f172a;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin: 0;
 }
 
 .startup-info-chips {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
 .info-chip {
-    font-size: 12.5px;
+    font-size: 11.5px;
     font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 8px;
+    padding: 4px 10px;
+    border-radius: 6px;
     background: #f1f5f9;
     color: #334155;
     border: 1px solid #e2e8f0;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .info-chip.primary {
@@ -536,18 +536,18 @@ transform:translateY(-8px);
 .report-header-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .risk-score-pill {
-    padding: 7px 16px;
+    padding: 5px 12px;
     border-radius: 99px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
 }
 
 .risk-score-pill.high { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
@@ -558,36 +558,35 @@ transform:translateY(-8px);
     background: linear-gradient(135deg, #4f46e5, #7c3aed);
     color: #ffffff;
     border: none;
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 13px;
+    padding: 6px 13px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
 }
 
 .btn-ai-deep:hover {
     opacity: 0.92;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
 }
 
 .btn-agent-nav {
     background: #0f172a;
     color: #ffffff;
     border: none;
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 13px;
+    padding: 6px 13px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.2s ease;
 }
 
@@ -596,382 +595,350 @@ transform:translateY(-8px);
     transform: translateY(-1px);
 }
 
-/* SECTION 1: 2-Column Balanced Overview Grid */
-.assessment-overview-grid {
+/* Segmented View Switcher Tabs */
+.assessment-nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.assessment-tabs-group {
+    display: flex;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+    gap: 4px;
+}
+
+.assessment-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.18s ease;
+}
+
+.assessment-tab-btn:hover {
+    color: #1e293b;
+}
+
+.assessment-tab-btn.active {
+    background: #ffffff;
+    color: #4f46e5;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.assessment-view-hint {
+    font-size: 11.5px;
+    color: #64748b;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* PANORAMIC ZERO-SCROLL VIEW (3 Balanced Columns) */
+.assessment-panoramic-view {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
+    grid-template-columns: 1fr 1.15fr 1.35fr;
+    gap: 14px;
+    align-items: stretch;
     width: 100%;
     box-sizing: border-box;
 }
 
-.report-col-card {
+.panoramic-card {
     background: #ffffff;
-    border-radius: 18px;
-    padding: 22px 24px;
+    border-radius: 14px;
+    padding: 14px 16px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.035);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.025);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
     min-width: 0;
-    width: 100%;
     box-sizing: border-box;
 }
 
-.card-section-header {
+.panoramic-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 18px;
-    padding-bottom: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #f1f5f9;
 }
 
-.card-section-header h3 {
-    font-size: 16px;
+.panoramic-header h3 {
+    font-size: 13.5px;
     font-weight: 800;
     color: #0f172a;
-    margin: 0 0 3px 0;
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
-.card-section-sub {
-    font-size: 12px;
+.panoramic-header .badge-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+/* Col 1: Risk Diagnostics Compact */
+.pano-risk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.pano-risk-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.pano-risk-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.pano-risk-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.pano-risk-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+
+.pano-findings-box {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    margin-top: auto;
+}
+
+.pano-findings-box h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: #64748b;
+    margin: 0 0 6px 0;
+    font-weight: 700;
+}
+
+.pano-findings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pano-finding-pill {
+    font-size: 11px;
+    color: #1e293b;
+    line-height: 1.35;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.pano-finding-pill i {
+    color: #4f46e5;
+    font-size: 10px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* Col 2: Feasibility Compact */
+.pano-viability-banner {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.pano-viability-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: #15803d;
+}
+
+.pano-verdict-box {
+    background: #eef2ff;
+    border-left: 3px solid #4f46e5;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #1e293b;
+    margin-bottom: 10px;
     font-weight: 500;
 }
 
-.viability-badge-pill {
-    font-size: 12px;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 8px;
-    background: #dcfce7;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
-}
-
-/* Risk Progress Meters */
-.risk-meter-list {
+.pano-dim-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 6px;
 }
 
-.risk-meter-item {
+.pano-dim-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+.pano-dim-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 3px;
+}
+
+.pano-dim-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.pano-dim-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+
+/* Col 3: SWOT 2x2 Compact Grid */
+.pano-swot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.pano-swot-quad {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.risk-meter-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: #334155;
-}
-
-.risk-meter-bar-bg {
-    width: 100%;
-    height: 7px;
-    background: #f1f5f9;
-    border-radius: 99px;
-    overflow: hidden;
-}
-
-.risk-meter-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 0.6s ease;
-}
-
-.fill-risk-high { background: linear-gradient(90deg, #f87171, #ef4444); }
-.fill-risk-med { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
-.fill-risk-low { background: linear-gradient(90deg, #34d399, #10b981); }
-
-/* Findings Executive Box */
-.findings-box-executive {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 14px 16px;
-    border: 1px solid #e2e8f0;
-    margin-top: auto;
-}
-
-.findings-box-executive h4 {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #475569;
-    margin: 0 0 10px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 700;
-}
-
-.findings-pill-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.finding-pill-item {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 12.5px;
-    color: #1e293b;
-    line-height: 1.45;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.finding-pill-item i {
-    margin-top: 2px;
-    flex-shrink: 0;
-}
-
-/* Feasibility Column Components */
-.feasibility-hero-banner {
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-    border: 1px solid #bbf7d0;
-    border-radius: 14px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 14px;
-}
-
-.viability-metric-group {
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #bbf7d0;
-    padding-right: 16px;
-}
-
-.viability-metric-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: #166534;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.viability-metric-val {
-    font-size: 26px;
-    font-weight: 800;
-    color: #15803d;
-    line-height: 1.1;
-    margin-top: 2px;
-}
-
-.viability-metric-desc {
-    font-size: 12.5px;
-    font-weight: 500;
-    color: #166534;
-    line-height: 1.45;
-}
-
-.feasibility-verdict-box {
-    background: #eef2ff;
-    border-left: 4px solid #4f46e5;
-    padding: 12px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.5;
-    color: #1e293b;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-}
-
-.feasibility-verdict-box .quote-icon {
-    color: #6366f1;
-    font-size: 14px;
-    margin-top: 2px;
-    flex-shrink: 0;
-}
-
-.feasibility-verdict-box p {
-    margin: 0;
-    font-weight: 500;
-}
-
-.feasibility-dim-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.dim-compact-item {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 10px 14px;
-    transition: background 0.2s ease;
-}
-
-.dim-compact-item:hover {
-    background: #f1f5f9;
-}
-
-.dim-compact-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 5px;
-}
-
-.dim-compact-header span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.dim-compact-bar-bg {
-    width: 100%;
-    height: 6px;
-    background: #e2e8f0;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-bottom: 5px;
-}
-
-.dim-compact-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-}
-
-.fill-purple { background: linear-gradient(90deg, #a855f7, #7c3aed); }
-.fill-teal { background: linear-gradient(90deg, #2dd4bf, #0d9488); }
-.fill-indigo { background: linear-gradient(90deg, #818cf8, #4f46e5); }
-.fill-blue { background: linear-gradient(90deg, #38bdf8, #0284c7); }
-.fill-emerald { background: linear-gradient(90deg, #34d399, #059669); }
-
-.dim-compact-insight {
-    font-size: 11.5px;
-    color: #64748b;
-    line-height: 1.4;
-    margin: 0;
-}
-
-/* SECTION 2: Full-Width 2x2 SWOT Matrix */
-.swot-full-card {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.swot-badge-tag {
-    font-size: 11.5px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
-    background: #eff6ff;
-    color: #1d4ed8;
-}
-
-.swot-executive-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.swot-exec-quadrant {
-    padding: 16px 18px;
-    border-radius: 14px;
-    border: 1px solid;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.swot-exec-quadrant.strengths {
+.pano-swot-quad.strengths {
     background: #f0fdf4;
     border-color: #bbf7d0;
-    border-left: 5px solid #10b981;
+    border-left: 3px solid #10b981;
 }
 
-.swot-exec-quadrant.weaknesses {
+.pano-swot-quad.weaknesses {
     background: #fffbeb;
     border-color: #fde68a;
-    border-left: 5px solid #f59e0b;
+    border-left: 3px solid #f59e0b;
 }
 
-.swot-exec-quadrant.opportunities {
+.pano-swot-quad.opportunities {
     background: #eff6ff;
     border-color: #bfdbfe;
-    border-left: 5px solid #3b82f6;
+    border-left: 3px solid #3b82f6;
 }
 
-.swot-exec-quadrant.threats {
+.pano-swot-quad.threats {
     background: #fef2f2;
     border-color: #fecaca;
-    border-left: 5px solid #ef4444;
+    border-left: 3px solid #ef4444;
 }
 
-.swot-quad-header {
+.pano-swot-head {
+    font-size: 11px;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
+    gap: 5px;
 }
 
-.swot-exec-quadrant.strengths .swot-quad-header { color: #047857; }
-.swot-exec-quadrant.weaknesses .swot-quad-header { color: #b45309; }
-.swot-exec-quadrant.opportunities .swot-quad-header { color: #1d4ed8; }
-.swot-exec-quadrant.threats .swot-quad-header { color: #b91c1c; }
+.pano-swot-quad.strengths .pano-swot-head { color: #047857; }
+.pano-swot-quad.weaknesses .pano-swot-head { color: #b45309; }
+.pano-swot-quad.opportunities .pano-swot-head { color: #1d4ed8; }
+.pano-swot-quad.threats .pano-swot-head { color: #b91c1c; }
 
-.swot-quad-items {
+.pano-swot-items {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
-.swot-item-box {
+.pano-swot-item {
     background: rgba(255, 255, 255, 0.9);
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    padding: 4px 6px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.swot-item-box strong {
-    font-size: 13px;
+.pano-swot-item strong {
+    font-size: 10.5px;
     color: #0f172a;
     display: block;
-    line-height: 1.35;
-    margin-bottom: 2px;
+    line-height: 1.25;
 }
 
-.swot-item-box p {
-    font-size: 12px;
+.pano-swot-item p {
+    font-size: 9.5px;
     color: #475569;
-    margin: 0;
-    line-height: 1.45;
+    margin: 1px 0 0 0;
+    line-height: 1.25;
+}
+
+/* TABBED DETAILED VIEWS */
+.assessment-detail-view {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.2s ease;
+}
+
+.assessment-detail-view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 1024px) {
-    .assessment-overview-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-    .swot-executive-grid {
-        grid-template-columns: minmax(0, 1fr);
+    .assessment-panoramic-view {
+        grid-template-columns: 1fr;
     }
 }
 

@@ -874,7 +874,7 @@ function updateAssessment() {
             </div>
             <div class="report-header-right">
                 <span class="risk-score-pill ${pillClass}">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Overall Risk: ${overall}% (${level})
+                    <i class="fa-solid fa-triangle-exclamation"></i> Risk: ${overall}% (${level})
                 </span>
                 <button id="refreshAiFeasibilityBtn" class="btn-ai-deep" title="Regenerate with Gemini API">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> AI Deep Analysis
@@ -885,242 +885,448 @@ function updateAssessment() {
             </div>
         </div>
 
-        <!-- SECTION 1: 2-Column Balanced Overview Grid -->
-        <div class="assessment-overview-grid">
-            <!-- COLUMN 1: Risk Diagnostics & Findings -->
-            <div class="report-col-card">
-                <div class="card-section-header">
-                    <div>
-                        <h3><i class="fa-solid fa-gauge-high" style="color:#ef4444;"></i> Risk Diagnostic Breakdown</h3>
-                        <span class="card-section-sub">Assessed across 5 core failure risk vectors</span>
-                    </div>
-                    <span class="risk-score-pill ${pillClass}">${overall}% Risk</span>
-                </div>
-                
-                <div class="risk-meter-list">
-                    <div class="risk-meter-item">
-                        <div class="risk-meter-header">
-                            <span><i class="fa-solid fa-wallet" style="color:#6366f1; margin-right:4px;"></i> Financial Capital Risk</span>
-                            <span style="font-weight:700;">${scores.financial}%</span>
-                        </div>
-                        <div class="risk-meter-bar-bg">
-                            <div class="risk-meter-bar-fill ${scores.financial >= 60 ? 'fill-risk-high' : scores.financial >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.financial}%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="risk-meter-item">
-                        <div class="risk-meter-header">
-                            <span><i class="fa-solid fa-chart-pie" style="color:#0ea5e9; margin-right:4px;"></i> Market Competition Risk</span>
-                            <span style="font-weight:700;">${scores.market}%</span>
-                        </div>
-                        <div class="risk-meter-bar-bg">
-                            <div class="risk-meter-bar-fill ${scores.market >= 60 ? 'fill-risk-high' : scores.market >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.market}%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="risk-meter-item">
-                        <div class="risk-meter-header">
-                            <span><i class="fa-solid fa-building" style="color:#8b5cf6; margin-right:4px;"></i> Business Model Risk</span>
-                            <span style="font-weight:700;">${scores.business}%</span>
-                        </div>
-                        <div class="risk-meter-bar-bg">
-                            <div class="risk-meter-bar-fill ${scores.business >= 60 ? 'fill-risk-high' : scores.business >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.business}%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="risk-meter-item">
-                        <div class="risk-meter-header">
-                            <span><i class="fa-solid fa-gears" style="color:#f59e0b; margin-right:4px;"></i> Execution & Scaling Risk</span>
-                            <span style="font-weight:700;">${scores.execution}%</span>
-                        </div>
-                        <div class="risk-meter-bar-bg">
-                            <div class="risk-meter-bar-fill ${scores.execution >= 60 ? 'fill-risk-high' : scores.execution >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.execution}%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="risk-meter-item">
-                        <div class="risk-meter-header">
-                            <span><i class="fa-solid fa-lightbulb" style="color:#10b981; margin-right:4px;"></i> Innovation Differentiation Risk</span>
-                            <span style="font-weight:700;">${scores.innovation}%</span>
-                        </div>
-                        <div class="risk-meter-bar-bg">
-                            <div class="risk-meter-bar-fill ${scores.innovation >= 60 ? 'fill-risk-high' : scores.innovation >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.innovation}%;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="findings-box-executive">
-                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Critical Diagnostic Observations</h4>
-                    <div class="findings-pill-list">
-                        ${findings.map(f => `
-                            <div class="finding-pill-item">
-                                <i class="fa-solid fa-circle-check" style="color:#4f46e5;"></i>
-                                <span>${f}</span>
-                            </div>
-                        `).join("")}
-                    </div>
-                </div>
+        <!-- Segmented Tab Switcher -->
+        <div class="assessment-nav-bar">
+            <div class="assessment-tabs-group">
+                <button class="assessment-tab-btn active" data-target="view-panoramic">
+                    <i class="fa-solid fa-table-columns"></i> Panoramic View
+                </button>
+                <button class="assessment-tab-btn" data-target="view-risk">
+                    <i class="fa-solid fa-gauge-high"></i> Risk Breakdown
+                </button>
+                <button class="assessment-tab-btn" data-target="view-feasibility">
+                    <i class="fa-solid fa-chart-line"></i> Feasibility Matrix
+                </button>
+                <button class="assessment-tab-btn" data-target="view-swot">
+                    <i class="fa-solid fa-table-cells-large"></i> 2×2 SWOT Matrix
+                </button>
             </div>
+            <span class="assessment-view-hint">
+                <i class="fa-solid fa-desktop" style="color:#4f46e5;"></i> Zero-Scroll Executive Layout
+            </span>
+        </div>
 
-            <!-- COLUMN 2: Feasibility Assessment -->
-            <div class="report-col-card">
-                <div class="card-section-header">
-                    <div>
-                        <h3><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> Venture Viability & Feasibility</h3>
-                        <span class="card-section-sub">Operational readiness & market sustainability index</span>
+        <!-- VIEW 1: PANORAMIC ZERO-SCROLL 3-COLUMN VIEW (Active by default) -->
+        <div id="view-panoramic" class="assessment-detail-view active">
+            <div class="assessment-panoramic-view">
+                <!-- Col 1: Risk Diagnostics -->
+                <div class="panoramic-card">
+                    <div class="panoramic-header">
+                        <h3><i class="fa-solid fa-gauge-high" style="color:#ef4444;"></i> Risk Diagnostics</h3>
+                        <span class="badge-tag ${pillClass === 'high' ? 'tag-rose' : pillClass === 'medium' ? 'tag-amber' : 'tag-emerald'}" style="font-size:10.5px; padding:2px 7px; border-radius:4px; font-weight:700;">
+                            ${overall}% Overall
+                        </span>
                     </div>
-                    <span class="viability-badge-pill">${feasibility.status}</span>
+
+                    <div class="pano-risk-list">
+                        <div class="pano-risk-item">
+                            <div class="pano-risk-meta">
+                                <span>Financial Capital</span>
+                                <span>${scores.financial}%</span>
+                            </div>
+                            <div class="pano-risk-bar-bg">
+                                <div class="pano-risk-bar-fill ${scores.financial >= 60 ? 'fill-risk-high' : scores.financial >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.financial}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-risk-item">
+                            <div class="pano-risk-meta">
+                                <span>Market Competition</span>
+                                <span>${scores.market}%</span>
+                            </div>
+                            <div class="pano-risk-bar-bg">
+                                <div class="pano-risk-bar-fill ${scores.market >= 60 ? 'fill-risk-high' : scores.market >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.market}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-risk-item">
+                            <div class="pano-risk-meta">
+                                <span>Business Model</span>
+                                <span>${scores.business}%</span>
+                            </div>
+                            <div class="pano-risk-bar-bg">
+                                <div class="pano-risk-bar-fill ${scores.business >= 60 ? 'fill-risk-high' : scores.business >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.business}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-risk-item">
+                            <div class="pano-risk-meta">
+                                <span>Execution Readiness</span>
+                                <span>${scores.execution}%</span>
+                            </div>
+                            <div class="pano-risk-bar-bg">
+                                <div class="pano-risk-bar-fill ${scores.execution >= 60 ? 'fill-risk-high' : scores.execution >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.execution}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-risk-item">
+                            <div class="pano-risk-meta">
+                                <span>Tech Differentiation</span>
+                                <span>${scores.innovation}%</span>
+                            </div>
+                            <div class="pano-risk-bar-bg">
+                                <div class="pano-risk-bar-fill ${scores.innovation >= 60 ? 'fill-risk-high' : scores.innovation >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.innovation}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pano-findings-box">
+                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Key Diagnostic Notes</h4>
+                        <div class="pano-findings-list">
+                            ${findings.slice(0, 3).map(f => `
+                                <div class="pano-finding-pill">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>${f}</span>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="feasibility-hero-banner">
-                    <div class="viability-metric-group">
-                        <span class="viability-metric-label">Viability Index</span>
-                        <span class="viability-metric-val">${feasibility.overall}%</span>
+
+                <!-- Col 2: Feasibility Matrix -->
+                <div class="panoramic-card">
+                    <div class="panoramic-header">
+                        <h3><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> Feasibility & GTM</h3>
+                        <span class="badge-tag" style="background:#dcfce7; color:#15803d; font-size:10.5px; padding:2px 7px; border-radius:4px; font-weight:700;">
+                            ${feasibility.status}
+                        </span>
                     </div>
-                    <div class="viability-metric-desc">
-                        ${feasibility.overall >= 75 ? 'Strong GTM readiness with sustainable unit economics potential' : 'Moderate feasibility; capital discipline and execution safeguards required'}
+
+                    <div class="pano-viability-banner">
+                        <div>
+                            <span style="font-size:10px; color:#166534; font-weight:700; text-transform:uppercase;">Viability Index</span>
+                            <div class="pano-viability-val">${feasibility.overall}%</div>
+                        </div>
+                        <span style="font-size:11px; font-weight:600; color:#166534; text-align:right;">
+                            ${feasibility.overall >= 75 ? 'Strong GTM Potential' : 'Moderate Viability'}
+                        </span>
+                    </div>
+
+                    ${feasibility.verdict ? `
+                        <div class="pano-verdict-box">
+                            "${feasibility.verdict.slice(0, 110)}${feasibility.verdict.length > 110 ? '...' : ''}"
+                        </div>
+                    ` : ""}
+
+                    <div class="pano-dim-list">
+                        <div class="pano-dim-item">
+                            <div class="pano-dim-header">
+                                <span>Financial Runway</span>
+                                <span>${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%</span>
+                            </div>
+                            <div class="pano-dim-bar-bg">
+                                <div class="pano-dim-bar-fill fill-purple" style="width:${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-dim-item">
+                            <div class="pano-dim-header">
+                                <span>Market Velocity</span>
+                                <span>${feasibility.dimensions?.market?.score || feasibility.market || 80}%</span>
+                            </div>
+                            <div class="pano-dim-bar-bg">
+                                <div class="pano-dim-bar-fill fill-teal" style="width:${feasibility.dimensions?.market?.score || feasibility.market || 80}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-dim-item">
+                            <div class="pano-dim-header">
+                                <span>Business Scalability</span>
+                                <span>${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%</span>
+                            </div>
+                            <div class="pano-dim-bar-bg">
+                                <div class="pano-dim-bar-fill fill-indigo" style="width:${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="pano-dim-item">
+                            <div class="pano-dim-header">
+                                <span>Industry Conditions</span>
+                                <span>${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%</span>
+                            </div>
+                            <div class="pano-dim-bar-bg">
+                                <div class="pano-dim-bar-fill fill-blue" style="width:${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                ${feasibility.verdict ? `
-                    <div class="feasibility-verdict-box">
-                        <i class="fa-solid fa-quote-left quote-icon"></i>
-                        <p>${feasibility.verdict}</p>
-                    </div>
-                ` : ""}
-
-                <div class="feasibility-dim-list">
-                    <div class="dim-compact-item">
-                        <div class="dim-compact-header">
-                            <span><i class="fa-solid fa-wallet" style="color:#7c3aed;"></i> Financial Feasibility</span>
-                            <span style="font-weight:700;">${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%</span>
-                        </div>
-                        <div class="dim-compact-bar-bg">
-                            <div class="dim-compact-bar-fill fill-purple" style="width:${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%;"></div>
-                        </div>
-                        <p class="dim-compact-insight">${feasibility.dimensions?.financial?.insight || "Runway adequacy and initial burn sustainability."}</p>
+                <!-- Col 3: 2x2 SWOT Matrix -->
+                <div class="panoramic-card">
+                    <div class="panoramic-header">
+                        <h3><i class="fa-solid fa-table-cells" style="color:#3b82f6;"></i> 2×2 SWOT Matrix</h3>
+                        <span class="badge-tag" style="background:#eff6ff; color:#1d4ed8; font-size:10.5px; padding:2px 7px; border-radius:4px; font-weight:700;">
+                            Strategic
+                        </span>
                     </div>
 
-                    <div class="dim-compact-item">
-                        <div class="dim-compact-header">
-                            <span><i class="fa-solid fa-chart-pie" style="color:#0d9488;"></i> Market Feasibility</span>
-                            <span style="font-weight:700;">${feasibility.dimensions?.market?.score || feasibility.market || 80}%</span>
+                    <div class="pano-swot-grid">
+                        <div class="pano-swot-quad strengths">
+                            <div class="pano-swot-head"><i class="fa-solid fa-shield-halved"></i> Strengths</div>
+                            <div class="pano-swot-items">
+                                ${(swot.strengths || []).slice(0, 2).map(item => `
+                                    <div class="pano-swot-item">
+                                        <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    </div>
+                                `).join("")}
+                            </div>
                         </div>
-                        <div class="dim-compact-bar-bg">
-                            <div class="dim-compact-bar-fill fill-teal" style="width:${feasibility.dimensions?.market?.score || feasibility.market || 80}%;"></div>
-                        </div>
-                        <p class="dim-compact-insight">${feasibility.dimensions?.market?.insight || "Demand velocity, TAM expansion, and buyer friction."}</p>
-                    </div>
 
-                    <div class="dim-compact-item">
-                        <div class="dim-compact-header">
-                            <span><i class="fa-solid fa-building" style="color:#4f46e5;"></i> Business Model Feasibility</span>
-                            <span style="font-weight:700;">${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%</span>
+                        <div class="pano-swot-quad weaknesses">
+                            <div class="pano-swot-head"><i class="fa-solid fa-triangle-exclamation"></i> Weaknesses</div>
+                            <div class="pano-swot-items">
+                                ${(swot.weaknesses || []).slice(0, 2).map(item => `
+                                    <div class="pano-swot-item">
+                                        <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    </div>
+                                `).join("")}
+                            </div>
                         </div>
-                        <div class="dim-compact-bar-bg">
-                            <div class="dim-compact-bar-fill fill-indigo" style="width:${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%;"></div>
-                        </div>
-                        <p class="dim-compact-insight">${feasibility.dimensions?.businessModel?.insight || "Recurring contract scalability and gross margin defensibility."}</p>
-                    </div>
 
-                    <div class="dim-compact-item">
-                        <div class="dim-compact-header">
-                            <span><i class="fa-solid fa-globe" style="color:#0284c7;"></i> Industry Macro Conditions</span>
-                            <span style="font-weight:700;">${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%</span>
+                        <div class="pano-swot-quad opportunities">
+                            <div class="pano-swot-head"><i class="fa-solid fa-rocket"></i> Opportunities</div>
+                            <div class="pano-swot-items">
+                                ${(swot.opportunities || []).slice(0, 2).map(item => `
+                                    <div class="pano-swot-item">
+                                        <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    </div>
+                                `).join("")}
+                            </div>
                         </div>
-                        <div class="dim-compact-bar-bg">
-                            <div class="dim-compact-bar-fill fill-blue" style="width:${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%;"></div>
-                        </div>
-                        <p class="dim-compact-insight">${feasibility.dimensions?.industry?.insight || "Macro venture capital inflow and sector resilience."}</p>
-                    </div>
 
-                    <div class="dim-compact-item">
-                        <div class="dim-compact-header">
-                            <span><i class="fa-solid fa-gears" style="color:#059669;"></i> Execution Readiness</span>
-                            <span style="font-weight:700;">${feasibility.dimensions?.execution?.score || feasibility.execution || 78}%</span>
+                        <div class="pano-swot-quad threats">
+                            <div class="pano-swot-head"><i class="fa-solid fa-skull-crossbones"></i> Threats</div>
+                            <div class="pano-swot-items">
+                                ${(swot.threats || []).slice(0, 2).map(item => `
+                                    <div class="pano-swot-item">
+                                        <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    </div>
+                                `).join("")}
+                            </div>
                         </div>
-                        <div class="dim-compact-bar-bg">
-                            <div class="dim-compact-bar-fill fill-emerald" style="width:${feasibility.dimensions?.execution?.score || feasibility.execution || 78}%;"></div>
-                        </div>
-                        <p class="dim-compact-insight">${feasibility.dimensions?.execution?.insight || "Go-to-market speed and operational execution posture."}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 2: Full-Width 2x2 Strategic SWOT Matrix -->
-        <div class="report-col-card swot-full-card">
-            <div class="card-section-header">
-                <div>
-                    <h3><i class="fa-solid fa-table-cells-large" style="color:#3b82f6;"></i> Executive 2×2 SWOT Strategic Matrix</h3>
-                    <span class="card-section-sub">Internal core capabilities and vulnerabilities mapped against external market dynamics</span>
+        <!-- VIEW 2: RISK BREAKDOWN TAB -->
+        <div id="view-risk" class="assessment-detail-view">
+            <div class="assessment-overview-grid">
+                <div class="report-col-card" style="grid-column: span 2;">
+                    <div class="card-section-header">
+                        <div>
+                            <h3><i class="fa-solid fa-gauge-high" style="color:#ef4444;"></i> Risk Diagnostic Breakdown</h3>
+                            <span class="card-section-sub">Comprehensive failure mode risk evaluation across 5 operational vectors</span>
+                        </div>
+                        <span class="risk-score-pill ${pillClass}">Overall: ${overall}% (${level} Risk)</span>
+                    </div>
+
+                    <div class="risk-meter-list" style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px;">
+                        <div class="risk-meter-item">
+                            <div class="risk-meter-header">
+                                <span><i class="fa-solid fa-wallet" style="color:#6366f1;"></i> Financial Capital Risk</span>
+                                <span>${scores.financial}%</span>
+                            </div>
+                            <div class="risk-meter-bar-bg">
+                                <div class="risk-meter-bar-fill ${scores.financial >= 60 ? 'fill-risk-high' : scores.financial >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.financial}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="risk-meter-item">
+                            <div class="risk-meter-header">
+                                <span><i class="fa-solid fa-chart-pie" style="color:#0ea5e9;"></i> Market Competition Risk</span>
+                                <span>${scores.market}%</span>
+                            </div>
+                            <div class="risk-meter-bar-bg">
+                                <div class="risk-meter-bar-fill ${scores.market >= 60 ? 'fill-risk-high' : scores.market >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.market}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="risk-meter-item">
+                            <div class="risk-meter-header">
+                                <span><i class="fa-solid fa-building" style="color:#8b5cf6;"></i> Business Model Scalability Risk</span>
+                                <span>${scores.business}%</span>
+                            </div>
+                            <div class="risk-meter-bar-bg">
+                                <div class="risk-meter-bar-fill ${scores.business >= 60 ? 'fill-risk-high' : scores.business >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.business}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="risk-meter-item">
+                            <div class="risk-meter-header">
+                                <span><i class="fa-solid fa-gears" style="color:#f59e0b;"></i> Execution Readiness Risk</span>
+                                <span>${scores.execution}%</span>
+                            </div>
+                            <div class="risk-meter-bar-bg">
+                                <div class="risk-meter-bar-fill ${scores.execution >= 60 ? 'fill-risk-high' : scores.execution >= 40 ? 'fill-risk-med' : 'fill-risk-low'}" style="width:${scores.execution}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="findings-box-executive" style="margin-top:14px;">
+                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> AI Diagnostic Key Observations</h4>
+                        <div class="findings-pill-list">
+                            ${findings.map(f => `
+                                <div class="finding-pill-item">
+                                    <i class="fa-solid fa-circle-check" style="color:#4f46e5;"></i>
+                                    <span>${f}</span>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
                 </div>
-                <span class="swot-badge-tag"><i class="fa-solid fa-shield"></i> Strategic Diagnostic</span>
             </div>
+        </div>
 
-            <div class="swot-executive-grid">
-                <!-- Strengths -->
-                <div class="swot-exec-quadrant strengths">
-                    <div class="swot-quad-header">
-                        <i class="fa-solid fa-shield-halved"></i> Strengths (Internal Assets)
+        <!-- VIEW 3: FEASIBILITY MATRIX TAB -->
+        <div id="view-feasibility" class="assessment-detail-view">
+            <div class="assessment-overview-grid">
+                <div class="report-col-card" style="grid-column: span 2;">
+                    <div class="card-section-header">
+                        <div>
+                            <h3><i class="fa-solid fa-chart-line" style="color:#10b981;"></i> Venture Feasibility & GTM Viability</h3>
+                            <span class="card-section-sub">Detailed assessment of business viability across critical market criteria</span>
+                        </div>
+                        <span class="viability-badge-pill">${feasibility.status} (${feasibility.overall}% Index)</span>
                     </div>
-                    <div class="swot-quad-items">
-                        ${(swot.strengths || []).slice(0, 3).map(item => `
-                            <div class="swot-item-box">
-                                <strong>${typeof item === 'object' ? item.title : item}</strong>
-                                ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
+
+                    ${feasibility.verdict ? `
+                        <div class="feasibility-verdict-box" style="margin-bottom:14px;">
+                            <i class="fa-solid fa-quote-left quote-icon"></i>
+                            <p>${feasibility.verdict}</p>
+                        </div>
+                    ` : ""}
+
+                    <div class="feasibility-dim-list" style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px;">
+                        <div class="dim-compact-item">
+                            <div class="dim-compact-header">
+                                <span><i class="fa-solid fa-wallet" style="color:#7c3aed;"></i> Financial Feasibility</span>
+                                <span>${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%</span>
                             </div>
-                        `).join("")}
+                            <div class="dim-compact-bar-bg">
+                                <div class="dim-compact-bar-fill fill-purple" style="width:${feasibility.dimensions?.financial?.score || feasibility.financial || 75}%;"></div>
+                            </div>
+                            <p class="dim-compact-insight">${feasibility.dimensions?.financial?.insight || "Runway and capital burn adequacy."}</p>
+                        </div>
+
+                        <div class="dim-compact-item">
+                            <div class="dim-compact-header">
+                                <span><i class="fa-solid fa-chart-pie" style="color:#0d9488;"></i> Market Velocity</span>
+                                <span>${feasibility.dimensions?.market?.score || feasibility.market || 80}%</span>
+                            </div>
+                            <div class="dim-compact-bar-bg">
+                                <div class="dim-compact-bar-fill fill-teal" style="width:${feasibility.dimensions?.market?.score || feasibility.market || 80}%;"></div>
+                            </div>
+                            <p class="dim-compact-insight">${feasibility.dimensions?.market?.insight || "Demand velocity and buyer readiness."}</p>
+                        </div>
+
+                        <div class="dim-compact-item">
+                            <div class="dim-compact-header">
+                                <span><i class="fa-solid fa-building" style="color:#4f46e5;"></i> Business Model</span>
+                                <span>${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%</span>
+                            </div>
+                            <div class="dim-compact-bar-bg">
+                                <div class="dim-compact-bar-fill fill-indigo" style="width:${feasibility.dimensions?.businessModel?.score || feasibility.business || 85}%;"></div>
+                            </div>
+                            <p class="dim-compact-insight">${feasibility.dimensions?.businessModel?.insight || "Gross margins and recurring contract scale."}</p>
+                        </div>
+
+                        <div class="dim-compact-item">
+                            <div class="dim-compact-header">
+                                <span><i class="fa-solid fa-globe" style="color:#0284c7;"></i> Industry Macro Conditions</span>
+                                <span>${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%</span>
+                            </div>
+                            <div class="dim-compact-bar-bg">
+                                <div class="dim-compact-bar-fill fill-blue" style="width:${feasibility.dimensions?.industry?.score || feasibility.industry || 70}%;"></div>
+                            </div>
+                            <p class="dim-compact-insight">${feasibility.dimensions?.industry?.insight || "Macro institutional funding tailwinds."}</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Weaknesses -->
-                <div class="swot-exec-quadrant weaknesses">
-                    <div class="swot-quad-header">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Weaknesses (Internal Gaps)
+        <!-- VIEW 4: 2X2 SWOT MATRIX TAB -->
+        <div id="view-swot" class="assessment-detail-view">
+            <div class="report-col-card swot-full-card">
+                <div class="card-section-header">
+                    <div>
+                        <h3><i class="fa-solid fa-table-cells-large" style="color:#3b82f6;"></i> Executive 2×2 SWOT Strategic Matrix</h3>
+                        <span class="card-section-sub">Internal capabilities and external forces mapped for competitive positioning</span>
                     </div>
-                    <div class="swot-quad-items">
-                        ${(swot.weaknesses || []).slice(0, 3).map(item => `
-                            <div class="swot-item-box">
-                                <strong>${typeof item === 'object' ? item.title : item}</strong>
-                                ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
-                            </div>
-                        `).join("")}
-                    </div>
+                    <span class="swot-badge-tag"><i class="fa-solid fa-shield"></i> Strategic Playbook</span>
                 </div>
 
-                <!-- Opportunities -->
-                <div class="swot-exec-quadrant opportunities">
-                    <div class="swot-quad-header">
-                        <i class="fa-solid fa-rocket"></i> Opportunities (External Headroom)
+                <div class="swot-executive-grid">
+                    <!-- Strengths -->
+                    <div class="swot-exec-quadrant strengths">
+                        <div class="swot-quad-header"><i class="fa-solid fa-shield-halved"></i> Strengths (Internal Assets)</div>
+                        <div class="swot-quad-items">
+                            ${(swot.strengths || []).slice(0, 3).map(item => `
+                                <div class="swot-item-box">
+                                    <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
+                                </div>
+                            `).join("")}
+                        </div>
                     </div>
-                    <div class="swot-quad-items">
-                        ${(swot.opportunities || []).slice(0, 3).map(item => `
-                            <div class="swot-item-box">
-                                <strong>${typeof item === 'object' ? item.title : item}</strong>
-                                ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
-                            </div>
-                        `).join("")}
-                    </div>
-                </div>
 
-                <!-- Threats -->
-                <div class="swot-exec-quadrant threats">
-                    <div class="swot-quad-header">
-                        <i class="fa-solid fa-skull-crossbones"></i> Threats (External Risks)
+                    <!-- Weaknesses -->
+                    <div class="swot-exec-quadrant weaknesses">
+                        <div class="swot-quad-header"><i class="fa-solid fa-triangle-exclamation"></i> Weaknesses (Internal Gaps)</div>
+                        <div class="swot-quad-items">
+                            ${(swot.weaknesses || []).slice(0, 3).map(item => `
+                                <div class="swot-item-box">
+                                    <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
+                                </div>
+                            `).join("")}
+                        </div>
                     </div>
-                    <div class="swot-quad-items">
-                        ${(swot.threats || []).slice(0, 3).map(item => `
-                            <div class="swot-item-box">
-                                <strong>${typeof item === 'object' ? item.title : item}</strong>
-                                ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
-                            </div>
-                        `).join("")}
+
+                    <!-- Opportunities -->
+                    <div class="swot-exec-quadrant opportunities">
+                        <div class="swot-quad-header"><i class="fa-solid fa-rocket"></i> Opportunities (External Headroom)</div>
+                        <div class="swot-quad-items">
+                            ${(swot.opportunities || []).slice(0, 3).map(item => `
+                                <div class="swot-item-box">
+                                    <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+
+                    <!-- Threats -->
+                    <div class="swot-exec-quadrant threats">
+                        <div class="swot-quad-header"><i class="fa-solid fa-skull-crossbones"></i> Threats (External Risks)</div>
+                        <div class="swot-quad-items">
+                            ${(swot.threats || []).slice(0, 3).map(item => `
+                                <div class="swot-item-box">
+                                    <strong>${typeof item === 'object' ? item.title : item}</strong>
+                                    ${typeof item === 'object' && item.desc ? `<p>${item.desc}</p>` : ''}
+                                </div>
+                            `).join("")}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     `;
+
+    // Segmented Tab Switcher Listeners
+    const tabButtons = container.querySelectorAll(".assessment-tab-btn");
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tabButtons.forEach(b => b.classList.remove("active"));
+            container.querySelectorAll(".assessment-detail-view").forEach(v => v.classList.remove("active"));
+
+            btn.classList.add("active");
+            const targetId = btn.getAttribute("data-target");
+            const targetView = document.getElementById(targetId);
+            if (targetView) targetView.classList.add("active");
+        });
+    });
 
     // Button event listeners
     const refreshBtn = document.getElementById("refreshAiFeasibilityBtn");
