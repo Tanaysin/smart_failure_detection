@@ -50,8 +50,6 @@ const TOOLTIP_STYLE = {
     boxPadding: 4
 };
 
-// Shared light-theme axis style: no vertical gridlines,
-// faint dashed horizontal gridlines only, muted labels
 function cleanScales() {
     return {
         x: {
@@ -60,7 +58,7 @@ function cleanScales() {
             ticks: { color: COLORS.axisText, font: { size: 12 } }
         },
         y: {
-            grid: { color: COLORS.gridline, drawBorder: false, drawTicks: false },
+            grid: { display: false, drawBorder: false, drawTicks: false },
             border: { display: false },
             ticks: { color: COLORS.axisText, font: { size: 12 }, padding: 8 }
         }
@@ -1860,16 +1858,17 @@ function loadIndustryData(targetIndustry) {
                     scales: {
                         x: {
                             grid: { display: false },
+                            border: { display: false },
                             ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            grid: { display: false },
+                            border: { display: false },
                             ticks: {
                                 font: { family: "Poppins", weight: "600", size: 11 },
                                 color: "#64748b",
                                 callback: (val) => val + " pts"
-                            },
-                            border: { display: false }
+                            }
                         }
                     }
                 },
@@ -1927,16 +1926,17 @@ function loadIndustryData(targetIndustry) {
                     scales: {
                         x: {
                             grid: { display: false },
+                            border: { display: false },
                             ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            grid: { display: false },
+                            border: { display: false },
                             ticks: {
                                 font: { family: "Poppins", weight: "600", size: 11 },
                                 color: "#64748b",
                                 callback: (val) => "₹" + val.toLocaleString() + " Cr"
-                            },
-                            border: { display: false }
+                            }
                         }
                     }
                 },
@@ -2155,16 +2155,17 @@ function loadIndustryData(targetIndustry) {
                     scales: {
                         x: {
                             grid: { display: false },
+                            border: { display: false },
                             ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            grid: { display: false },
+                            border: { display: false },
                             ticks: {
                                 font: { family: "Poppins", weight: "600", size: 11 },
                                 color: "#64748b",
                                 callback: (val) => "₹" + val.toLocaleString() + " Cr"
-                            },
-                            border: { display: false }
+                            }
                         }
                     }
                 },
@@ -2222,16 +2223,17 @@ function loadIndustryData(targetIndustry) {
                     scales: {
                         x: {
                             grid: { display: false },
+                            border: { display: false },
                             ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            grid: { display: false },
+                            border: { display: false },
                             ticks: {
                                 font: { family: "Poppins", weight: "600", size: 11 },
                                 color: "#64748b",
                                 callback: (val) => "₹" + val.toLocaleString() + " Cr"
-                            },
-                            border: { display: false }
+                            }
                         }
                     }
                 },
@@ -2319,8 +2321,9 @@ function loadIndustryData(targetIndustry) {
                         r: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: "#f1f5f9" },
-                            angleLines: { color: "#e2e8f0" },
+                            grid: { display: false },
+                            angleLines: { display: false },
+                            border: { display: false },
                             pointLabels: {
                                 font: { family: "Poppins", size: 11, weight: "700" },
                                 color: "#475569"
