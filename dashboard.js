@@ -1784,7 +1784,26 @@ function loadIndustryData(targetIndustry) {
     // 3. ENHANCED CHARTS GENERATION
     // ======================================
 
-    // A. Industry Growth Trend — Smooth Gradient Line
+    // Shared Tooltip Configuration with Clean Number Formatting
+    const PRO_TOOLTIP_STYLE = {
+        backgroundColor: "#1e293b",
+        titleColor: "#94a3b8",
+        bodyColor: "#ffffff",
+        borderColor: "#334155",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 10,
+        displayColors: true,
+        boxWidth: 8,
+        boxHeight: 8,
+        usePointStyle: true,
+        titleFont: { family: "Poppins", size: 11, weight: "500" },
+        bodyFont: { family: "Poppins", size: 13, weight: "700" },
+        caretSize: 6,
+        boxPadding: 4
+    };
+
+    // A. Industry Growth Trend — Smooth Glow Gradient Line
     function createIndustryTrendChart(data) {
         const canvas = document.getElementById("industryTrendChart");
         if (!canvas) return;
@@ -1800,14 +1819,15 @@ function loadIndustryData(targetIndustry) {
                 data: {
                     labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
                     datasets: [{
-                        label: `${cleanInd} Growth Index`,
+                        label: `${cleanInd} Index`,
                         data: data.marketGrowth,
                         borderColor: "#4f46e5",
                         backgroundColor: (context) => {
                             const { ctx, chartArea } = context.chart;
                             if (!chartArea) return "rgba(79, 70, 229, 0.15)";
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "rgba(79, 70, 229, 0.35)");
+                            gradient.addColorStop(0, "rgba(79, 70, 229, 0.38)");
+                            gradient.addColorStop(0.7, "rgba(79, 70, 229, 0.08)");
                             gradient.addColorStop(1, "rgba(79, 70, 229, 0.0)");
                             return gradient;
                         },
@@ -1815,12 +1835,12 @@ function loadIndustryData(targetIndustry) {
                         pointRadius: 4,
                         pointBackgroundColor: "#ffffff",
                         pointBorderColor: "#4f46e5",
-                        pointBorderWidth: 2,
+                        pointBorderWidth: 2.5,
                         pointHoverRadius: 7,
                         pointHoverBackgroundColor: "#4f46e5",
                         pointHoverBorderColor: "#ffffff",
                         pointHoverBorderWidth: 3,
-                        tension: 0.4,
+                        tension: 0.42,
                         fill: true
                     }]
                 },
@@ -1830,17 +1850,26 @@ function loadIndustryData(targetIndustry) {
                     interaction: { intersect: false, mode: "index" },
                     plugins: {
                         legend: { display: false },
-                        tooltip: TOOLTIP_STYLE
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` Growth Index: ${ctx.parsed.y} pts`
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { weight: "600" }, color: "#64748b" }
+                            ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9" },
-                            ticks: { font: { weight: "600" }, color: "#64748b" },
-                            border: { dash: [4, 4], display: false }
+                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            ticks: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                color: "#64748b",
+                                callback: (val) => val + " pts"
+                            },
+                            border: { display: false }
                         }
                     }
                 },
@@ -1867,20 +1896,20 @@ function loadIndustryData(targetIndustry) {
                 data: {
                     labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
                     datasets: [{
-                        label: "VC Funding (₹ Crore)",
+                        label: "VC Capital (₹ Crore)",
                         data: data.funding,
                         backgroundColor: (context) => {
                             const { ctx, chartArea } = context.chart;
-                            if (!chartArea) return "#7c3aed";
+                            if (!chartArea) return "#6366f1";
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "#7c3aed");
-                            gradient.addColorStop(1, "#a855f7");
+                            gradient.addColorStop(0, "#6366f1");
+                            gradient.addColorStop(1, "#8b5cf6");
                             return gradient;
                         },
                         hoverBackgroundColor: "#4f46e5",
                         borderRadius: 8,
                         borderSkipped: false,
-                        borderWidth: 0
+                        maxBarThickness: 36
                     }]
                 },
                 options: {
@@ -1888,17 +1917,26 @@ function loadIndustryData(targetIndustry) {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: TOOLTIP_STYLE
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` Funding: ₹${ctx.parsed.y.toLocaleString()} Cr`
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { weight: "600" }, color: "#64748b" }
+                            ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9" },
-                            ticks: { font: { weight: "600" }, color: "#64748b" },
-                            border: { dash: [4, 4], display: false }
+                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            ticks: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                color: "#64748b",
+                                callback: (val) => "₹" + val.toLocaleString() + " Cr"
+                            },
+                            border: { display: false }
                         }
                     }
                 },
@@ -1927,9 +1965,10 @@ function loadIndustryData(targetIndustry) {
                     datasets: [{
                         data: [data.failureRate, 100 - data.failureRate],
                         backgroundColor: ["#f43f5e", "#10b981"],
-                        borderWidth: 4,
-                        borderColor: "#ffffff",
-                        hoverOffset: 6
+                        borderWidth: 0,
+                        spacing: 4,
+                        borderRadius: 6,
+                        hoverOffset: 8
                     }]
                 },
                 options: {
@@ -1937,8 +1976,21 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 14 } },
-                        tooltip: TOOLTIP_STYLE
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                font: { family: "Poppins", weight: "600", size: 12 },
+                                padding: 14,
+                                usePointStyle: true,
+                                pointStyle: "circle"
+                            }
+                        },
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.label}: ${ctx.parsed}%`
+                            }
+                        }
                     }
                 },
                 plugins: [centerTextPlugin(() => data.failureRate + "%", "Mortality Risk")],
@@ -1967,9 +2019,10 @@ function loadIndustryData(targetIndustry) {
                     datasets: [{
                         data: data.investmentDistribution,
                         backgroundColor: ["#4f46e5", "#06b6d4", "#10b981", "#f59e0b", "#8b5cf6"],
-                        borderWidth: 4,
-                        borderColor: "#ffffff",
-                        hoverOffset: 6
+                        borderWidth: 0,
+                        spacing: 4,
+                        borderRadius: 6,
+                        hoverOffset: 8
                     }]
                 },
                 options: {
@@ -1977,8 +2030,21 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
-                        tooltip: TOOLTIP_STYLE
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                padding: 12,
+                                usePointStyle: true,
+                                pointStyle: "circle"
+                            }
+                        },
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.label}: ${ctx.parsed}% of Volume`
+                            }
+                        }
                     }
                 },
                 animation: SMOOTH_ANIMATION
@@ -2005,21 +2071,36 @@ function loadIndustryData(targetIndustry) {
                     labels: data.competitors.map(c => c.name),
                     datasets: [{
                         data: data.competitors.map(c => c.marketShare),
-                        backgroundColor: ["#4f46e5", "#0ea5e9", "#10b981", "#f59e0b"],
-                        borderWidth: 4,
-                        borderColor: "#ffffff",
-                        hoverOffset: 6
+                        backgroundColor: ["#4f46e5", "#14b8a6", "#f59e0b", "#8b5cf6"],
+                        borderWidth: 0,
+                        spacing: 4,
+                        borderRadius: 6,
+                        hoverOffset: 8
                     }]
                 },
                 options: {
-                    cutout: "68%",
+                    cutout: "70%",
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
-                        tooltip: TOOLTIP_STYLE
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                padding: 12,
+                                usePointStyle: true,
+                                pointStyle: "circle"
+                            }
+                        },
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.label}: ${ctx.parsed}% Market Share`
+                            }
+                        }
                     }
                 },
+                plugins: [centerTextPlugin(() => (data.competitors[0]?.marketShare || 35) + "%", "Leader Share")],
                 animation: SMOOTH_ANIMATION
             }
         );
@@ -2047,16 +2128,16 @@ function loadIndustryData(targetIndustry) {
                         data: data.competitors.map(c => c.revenue),
                         backgroundColor: (context) => {
                             const { ctx, chartArea } = context.chart;
-                            if (!chartArea) return "#059669";
+                            if (!chartArea) return "#0d9488";
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "#059669");
-                            gradient.addColorStop(1, "#34d399");
+                            gradient.addColorStop(0, "#0d9488");
+                            gradient.addColorStop(1, "#10b981");
                             return gradient;
                         },
                         hoverBackgroundColor: "#047857",
                         borderRadius: 8,
                         borderSkipped: false,
-                        borderWidth: 0
+                        maxBarThickness: 34
                     }]
                 },
                 options: {
@@ -2064,17 +2145,26 @@ function loadIndustryData(targetIndustry) {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: TOOLTIP_STYLE
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` Annual Revenue: ₹${ctx.parsed.y.toLocaleString()} Cr`
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { weight: "600" }, color: "#64748b" }
+                            ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9" },
-                            ticks: { font: { weight: "600" }, color: "#64748b" },
-                            border: { dash: [4, 4], display: false }
+                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            ticks: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                color: "#64748b",
+                                callback: (val) => "₹" + val.toLocaleString() + " Cr"
+                            },
+                            border: { display: false }
                         }
                     }
                 },
@@ -2105,16 +2195,16 @@ function loadIndustryData(targetIndustry) {
                         data: data.competitors.map(c => c.funding),
                         backgroundColor: (context) => {
                             const { ctx, chartArea } = context.chart;
-                            if (!chartArea) return "#6366f1";
+                            if (!chartArea) return "#4f46e5";
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "#6366f1");
+                            gradient.addColorStop(0, "#4f46e5");
                             gradient.addColorStop(1, "#818cf8");
                             return gradient;
                         },
-                        hoverBackgroundColor: "#4338ca",
+                        hoverBackgroundColor: "#3730a3",
                         borderRadius: 8,
                         borderSkipped: false,
-                        borderWidth: 0
+                        maxBarThickness: 34
                     }]
                 },
                 options: {
@@ -2122,17 +2212,26 @@ function loadIndustryData(targetIndustry) {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: TOOLTIP_STYLE
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` Capital Raised: ₹${ctx.parsed.y.toLocaleString()} Cr`
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { weight: "600" }, color: "#64748b" }
+                            ticks: { font: { family: "Poppins", weight: "600", size: 11 }, color: "#64748b" }
                         },
                         y: {
-                            grid: { color: "#f1f5f9" },
-                            ticks: { font: { weight: "600" }, color: "#64748b" },
-                            border: { dash: [4, 4], display: false }
+                            grid: { color: "#f1f5f9", borderDash: [4, 4] },
+                            ticks: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                color: "#64748b",
+                                callback: (val) => "₹" + val.toLocaleString() + " Cr"
+                            },
+                            border: { display: false }
                         }
                     }
                 },
@@ -2200,8 +2299,21 @@ function loadIndustryData(targetIndustry) {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: "bottom", labels: { font: { weight: "600" }, padding: 12 } },
-                        tooltip: TOOLTIP_STYLE
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                font: { family: "Poppins", weight: "600", size: 11 },
+                                padding: 12,
+                                usePointStyle: true,
+                                pointStyle: "circle"
+                            }
+                        },
+                        tooltip: {
+                            ...PRO_TOOLTIP_STYLE,
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw}/100 score`
+                            }
+                        }
                     },
                     scales: {
                         r: {
@@ -2210,7 +2322,7 @@ function loadIndustryData(targetIndustry) {
                             grid: { color: "#f1f5f9" },
                             angleLines: { color: "#e2e8f0" },
                             pointLabels: {
-                                font: { size: 11, weight: "700" },
+                                font: { family: "Poppins", size: 11, weight: "700" },
                                 color: "#475569"
                             },
                             ticks: { display: false }
