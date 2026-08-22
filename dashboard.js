@@ -846,9 +846,12 @@ function updateAssessment() {
     const swot = generateSWOT(project);
     const feasibility = calculateFeasibility(project);
 
-    // ==============================
-    // STREAMLINED REPORT RENDER
-    // ==============================
+    const container = document.getElementById("assessmentReportContainer") || document.querySelector(".assessment");
+    if (!container) return;
+
+    let pillClass = "medium";
+    if (overall >= 70) pillClass = "high";
+    else if (overall <= 40) pillClass = "low";
 
     const runwayMonths = Math.max(6, Math.min(24, Math.round(Number(project.budget || 500000) / 45000)));
     const monthlyBurn = Math.round(Number(project.budget || 500000) / runwayMonths);

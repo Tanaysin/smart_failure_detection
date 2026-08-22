@@ -18,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 
 
 // In-memory project cache fallback if database connection is offline
